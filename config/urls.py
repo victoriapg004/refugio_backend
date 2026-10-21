@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/token/', obtain_auth_token, name='api_token'),
     path('api/mascotas/', include('mascotas.urls')),
+    path('api/adoptantes/', include('adoptantes.urls')),
 ]
