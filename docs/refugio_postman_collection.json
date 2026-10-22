@@ -1,0 +1,2196 @@
+{
+  "info": {
+    "name": "Refugio API",
+    "description": "API REST del refugio de mascotas. Ejecutar primero la carpeta Auth y luego las demás en orden.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "Token {{token}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "token_operador",
+      "value": ""
+    },
+    {
+      "key": "token_consulta",
+      "value": ""
+    },
+    {
+      "key": "admin_password",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('token', pm.response.json().token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/token/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "token",
+                ""
+              ]
+            },
+            "description": "Guarda el token en la variable token.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"vicpg\",\n  \"password\": \"{{admin_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login operador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('token_operador', pm.response.json().token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/token/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "token",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"operador\",\n  \"password\": \"Refugio2026*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login consulta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('token_consulta', pm.response.json().token); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/token/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "token",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"consulta\",\n  \"password\": \"Huellas2026*\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Login con credenciales incorrectas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/token/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "token",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"operador\",\n  \"password\": \"mala\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mascotas",
+      "item": [
+        {
+          "name": "Mascotas - listar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200"
+          }
+        },
+        {
+          "name": "Mascotas - detalle",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "1",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200"
+          }
+        },
+        {
+          "name": "Mascotas - detalle inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 404', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "999",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 404"
+          }
+        },
+        {
+          "name": "Mascotas - POST sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 403",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nala\",\n  \"especie\": \"gato\",\n  \"raza\": \"Criollo\",\n  \"edad\": 6,\n  \"estado\": \"disponible\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Mascotas - POST operador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado hoy: 403. Cuando se configuren los permisos por rol debería pasar a 201.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nala\",\n  \"especie\": \"gato\",\n  \"raza\": \"Criollo\",\n  \"edad\": 6,\n  \"estado\": \"disponible\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "Token {{token_operador}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mascotas - POST administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('mascota_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 201",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nala\",\n  \"especie\": \"gato\",\n  \"raza\": \"Criollo\",\n  \"edad\": 6,\n  \"estado\": \"disponible\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Mascotas - POST especie inválida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Pez\",\n  \"especie\": \"pez\",\n  \"edad\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Mascotas - PATCH edad",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/{{mascota_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "{{mascota_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"edad\": 7\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Mascotas - PATCH estado inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/{{mascota_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "{{mascota_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"volando\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Mascotas - DELETE con solicitudes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/3/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "3",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 409"
+          }
+        },
+        {
+          "name": "Mascotas - DELETE sin relaciones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/{{mascota_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "{{mascota_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 204"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Adoptantes",
+      "item": [
+        {
+          "name": "Adoptantes - listar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200"
+          }
+        },
+        {
+          "name": "Adoptantes - detalle inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 404', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                "999",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 404"
+          }
+        },
+        {
+          "name": "Adoptantes - POST sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 403",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana Lucía Vargas\",\n  \"cedula\": \"1-1111-2222\",\n  \"correo\": \"ana.vargas@example.com\",\n  \"telefono\": \"8555-4444\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Adoptantes - POST administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('adoptante_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 201",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana Lucía Vargas\",\n  \"cedula\": \"1-1111-2222\",\n  \"correo\": \"ana.vargas@example.com\",\n  \"telefono\": \"8555-4444\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Adoptantes - POST cédula duplicada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Otra Persona\",\n  \"cedula\": \"1-1111-2222\",\n  \"correo\": \"otra@example.com\",\n  \"telefono\": \"8000-0000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Adoptantes - POST correo inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Otra Persona\",\n  \"cedula\": \"9-9999-9999\",\n  \"correo\": \"hola\",\n  \"telefono\": \"8000-0000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Adoptantes - PATCH dirección",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/{{adoptante_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                "{{adoptante_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"direccion\": \"Orotina, Centro\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Adoptantes - DELETE con solicitudes",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                "1",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 409"
+          }
+        },
+        {
+          "name": "Adoptantes - DELETE sin relaciones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/{{adoptante_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                "{{adoptante_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 204"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Solicitudes",
+      "item": [
+        {
+          "name": "Solicitudes - listar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200"
+          }
+        },
+        {
+          "name": "Solicitudes - detalle inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 404', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                "999",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 404"
+          }
+        },
+        {
+          "name": "Solicitudes - POST sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 403",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 1,\n  \"motivo\": \"Quiero adoptar\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Solicitudes - POST administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('solicitud_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 201",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 1,\n  \"motivo\": \"Quiero adoptar un perro pequeño\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Solicitudes - POST mascota inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 999,\n  \"motivo\": \"x\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Solicitudes - PATCH estado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/{{solicitud_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                "{{solicitud_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"aprobada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Solicitudes - PATCH estado inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/{{solicitud_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                "{{solicitud_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"x\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Solicitudes - DELETE con visitas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                "1",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 409"
+          }
+        },
+        {
+          "name": "Solicitudes - DELETE sin visitas",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/{{solicitud_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                "{{solicitud_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 204"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Visitas",
+      "item": [
+        {
+          "name": "Visitas - listar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200"
+          }
+        },
+        {
+          "name": "Visitas - detalle inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 404', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                "999",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 404"
+          }
+        },
+        {
+          "name": "Visitas - POST sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 403",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"2026-10-30T10:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Visitas - POST administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('visita_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 201",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"2026-10-30T10:00:00\",\n  \"observaciones\": \"Visita de seguimiento\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Visitas - POST solicitud inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud\": 999,\n  \"fecha_hora\": \"2026-10-30T10:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Visitas - POST fecha inválida",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"mañana\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Visitas - PATCH estado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/{{visita_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                "{{visita_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"realizada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Visitas - DELETE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/{{visita_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                "{{visita_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 204"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Salud",
+      "item": [
+        {
+          "name": "Vacunas - listar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/salud/vacunas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "vacunas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200"
+          }
+        },
+        {
+          "name": "Vacunas - detalle inexistente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 404', function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/salud/vacunas/999/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "vacunas",
+                "999",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 404"
+          }
+        },
+        {
+          "name": "Vacunas - POST sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/salud/vacunas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "vacunas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 403",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Leptospirosis\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Vacunas - POST administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('vacuna_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/salud/vacunas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "vacunas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 201",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Leptospirosis\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Vacunas - POST nombre duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/salud/vacunas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "vacunas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Rabia\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Vacunas - DELETE con registros",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 409', function () { pm.response.to.have.status(409); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/salud/vacunas/1/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "vacunas",
+                "1",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 409"
+          }
+        },
+        {
+          "name": "Registros - listar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/salud/registros/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "registros",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200"
+          }
+        },
+        {
+          "name": "Registros - POST administrador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('registro_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/salud/registros/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "registros",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 201",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mascota\": 3,\n  \"vacuna\": \"{{vacuna_id}}\",\n  \"fecha_aplicacion\": \"2026-10-20\",\n  \"observaciones\": \"Primera dosis\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Registros - POST duplicado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/salud/registros/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "registros",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mascota\": 3,\n  \"vacuna\": \"{{vacuna_id}}\",\n  \"fecha_aplicacion\": \"2026-10-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Registros - PATCH observaciones",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/salud/registros/{{registro_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "registros",
+                "{{registro_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"observaciones\": \"Sin reacción\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Registros - DELETE",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/salud/registros/{{registro_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "registros",
+                "{{registro_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 204"
+          }
+        },
+        {
+          "name": "Vacunas - DELETE sin registros",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/salud/vacunas/{{vacuna_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "vacunas",
+                "{{vacuna_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 204"
+          }
+        }
+      ]
+    }
+  ]
+}
