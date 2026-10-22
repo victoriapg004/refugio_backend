@@ -1,0 +1,264 @@
+[
+{
+  "model": "mascotas.mascota",
+  "pk": 1,
+  "fields": {
+    "nombre": "Toby",
+    "especie": "perro",
+    "raza": "Dachshund",
+    "edad": 25,
+    "descripcion": "Toby es un perrito cariñoso, juguetón y muy amigable. Tiene aproximadamente 2 años, de tamaño mediano.",
+    "estado": "disponible",
+    "fecha_ingreso": "2026-10-21"
+  }
+},
+{
+  "model": "mascotas.mascota",
+  "pk": 2,
+  "fields": {
+    "nombre": "Leo",
+    "especie": "perro",
+    "raza": "Mestizo",
+    "edad": 12,
+    "descripcion": "Leo es un perrito mestizo de 1 año, de tamaño pequeño, es alegre, curioso y lleno de energía.",
+    "estado": "en_proceso",
+    "fecha_ingreso": "2026-10-21"
+  }
+},
+{
+  "model": "mascotas.mascota",
+  "pk": 3,
+  "fields": {
+    "nombre": "Luna",
+    "especie": "gato",
+    "raza": "Siamés",
+    "edad": 10,
+    "descripcion": "Luna es una hermosa gatita siamesa de 10 meses. Es curiosa, dulce y juguetona.",
+    "estado": "adoptada",
+    "fecha_ingreso": "2026-10-21"
+  }
+},
+{
+  "model": "mascotas.mascota",
+  "pk": 4,
+  "fields": {
+    "nombre": "Coco",
+    "especie": "perro",
+    "raza": "chihuahua",
+    "edad": 18,
+    "descripcion": "Coco es un perrito chihuahua, de un año y medio. Le encantan los huesos y esconder calcetines.",
+    "estado": "disponible",
+    "fecha_ingreso": "2026-10-21"
+  }
+},
+{
+  "model": "adoptantes.adoptante",
+  "pk": 1,
+  "fields": {
+    "nombre": "Maria Fernanda",
+    "cedula": "1-1234-0567",
+    "correo": "maria.rojas@example.com",
+    "telefono": "8888-1111",
+    "direccion": "Orotina, Centro"
+  }
+},
+{
+  "model": "adoptantes.adoptante",
+  "pk": 2,
+  "fields": {
+    "nombre": "Juan Carlos Mora",
+    "cedula": "2-0456-0789",
+    "correo": "carlos.mora@example.com",
+    "telefono": "8777-2222",
+    "direccion": "Esparza centro"
+  }
+},
+{
+  "model": "adoptantes.adoptante",
+  "pk": 3,
+  "fields": {
+    "nombre": "Laura Jimenez",
+    "cedula": "1-0987-0321",
+    "correo": "laura.jimenez@example.com",
+    "telefono": "8666-3333",
+    "direccion": "San Ramon"
+  }
+},
+{
+  "model": "adoptantes.adoptante",
+  "pk": 4,
+  "fields": {
+    "nombre": "Ana Lucía Vargas",
+    "cedula": "1-1111-2222",
+    "correo": "ana.vargas@example.com",
+    "telefono": "8555-4444",
+    "direccion": ""
+  }
+},
+{
+  "model": "solicitudes.solicitudadopcion",
+  "pk": 1,
+  "fields": {
+    "adoptante": 1,
+    "mascota": 3,
+    "fecha": "2026-10-21",
+    "estado": "aprobada",
+    "motivo": "Quiero darle un hogar a una gata tranquila"
+  }
+},
+{
+  "model": "solicitudes.solicitudadopcion",
+  "pk": 2,
+  "fields": {
+    "adoptante": 2,
+    "mascota": 2,
+    "fecha": "2026-10-21",
+    "estado": "aprobada",
+    "motivo": "Busco un compañero para mi familia"
+  }
+},
+{
+  "model": "solicitudes.solicitudadopcion",
+  "pk": 3,
+  "fields": {
+    "adoptante": 3,
+    "mascota": 4,
+    "fecha": "2026-10-21",
+    "estado": "rechazada",
+    "motivo": "Vive en apartamento donde no se permiten mascotas"
+  }
+},
+{
+  "model": "solicitudes.solicitudadopcion",
+  "pk": 4,
+  "fields": {
+    "adoptante": 3,
+    "mascota": 1,
+    "fecha": "2026-10-21",
+    "estado": "pendiente",
+    "motivo": "Quiero adoptar un perro pequeño"
+  }
+},
+{
+  "model": "visitas.visita",
+  "pk": 1,
+  "fields": {
+    "solicitud": 1,
+    "fecha_hora": "2026-10-10T10:00:00Z",
+    "estado": "realizada",
+    "observaciones": "Hogar adecuado, buena conexión con la gata"
+  }
+},
+{
+  "model": "visitas.visita",
+  "pk": 2,
+  "fields": {
+    "solicitud": 2,
+    "fecha_hora": "2026-10-25T14:00:00Z",
+    "estado": "realizada",
+    "observaciones": ""
+  }
+},
+{
+  "model": "visitas.visita",
+  "pk": 3,
+  "fields": {
+    "solicitud": 3,
+    "fecha_hora": "2026-10-12T09:00:00Z",
+    "estado": "cancelada",
+    "observaciones": "La adoptante no pudo asistir"
+  }
+},
+{
+  "model": "salud.vacuna",
+  "pk": 1,
+  "fields": {
+    "nombre": "Rabia",
+    "descripcion": "Vacuna antirrábica anual"
+  }
+},
+{
+  "model": "salud.vacuna",
+  "pk": 2,
+  "fields": {
+    "nombre": "Triple felina",
+    "descripcion": "Protege contra rinotraqueítis, calicivirus y panleucopenia"
+  }
+},
+{
+  "model": "salud.vacuna",
+  "pk": 3,
+  "fields": {
+    "nombre": "Parvovirus",
+    "descripcion": "Protección contra parvovirosis canina"
+  }
+},
+{
+  "model": "salud.vacuna",
+  "pk": 4,
+  "fields": {
+    "nombre": "Leptospirosis",
+    "descripcion": ""
+  }
+},
+{
+  "model": "salud.registrovacunacion",
+  "pk": 1,
+  "fields": {
+    "mascota": 3,
+    "vacuna": 2,
+    "fecha_aplicacion": "2026-03-15",
+    "observaciones": "Sin reacción"
+  }
+},
+{
+  "model": "salud.registrovacunacion",
+  "pk": 2,
+  "fields": {
+    "mascota": 3,
+    "vacuna": 1,
+    "fecha_aplicacion": "2026-04-10",
+    "observaciones": ""
+  }
+},
+{
+  "model": "salud.registrovacunacion",
+  "pk": 3,
+  "fields": {
+    "mascota": 4,
+    "vacuna": 1,
+    "fecha_aplicacion": "2026-05-03",
+    "observaciones": ""
+  }
+},
+{
+  "model": "salud.registrovacunacion",
+  "pk": 4,
+  "fields": {
+    "mascota": 4,
+    "vacuna": 3,
+    "fecha_aplicacion": "2026-05-03",
+    "observaciones": ""
+  }
+},
+{
+  "model": "salud.registrovacunacion",
+  "pk": 5,
+  "fields": {
+    "mascota": 2,
+    "vacuna": 1,
+    "fecha_aplicacion": "2026-06-21",
+    "observaciones": ""
+  }
+},
+{
+  "model": "salud.registrovacunacion",
+  "pk": 6,
+  "fields": {
+    "mascota": 1,
+    "vacuna": 3,
+    "fecha_aplicacion": "2026-07-08",
+    "observaciones": ""
+  }
+}
+]
