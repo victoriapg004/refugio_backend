@@ -17,7 +17,7 @@ def verificar_permiso(user, metodo):
 
     #Si es operador y existe , puede acceder
     es_operador = user.groups.filter(name='Operador').exists()
-    if es_operador and method in ['POST','PUT','PATCH']:
+    if es_operador and metodo in ['POST','PUT','PATCH']:
         return None
 
     #Y para todo lo demas respondemos con un 403
