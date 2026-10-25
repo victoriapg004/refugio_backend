@@ -1,4 +1,5 @@
 from config.permisos import verificar_permiso
+from config.paginacion import paginar
 
 from django.db.models import ProtectedError
 from rest_framework import status
@@ -12,9 +13,25 @@ from .serializers import SolicitudAdopcionSerializer
 @api_view(['GET', 'POST'])
 def solicitudes_api(request):
     if request.method == 'GET':
-        solicitudes = SolicitudAdopcion.objects.select_related('adoptante', 'mascota').order_by('-fecha', '-id')
-        serializer = SolicitudAdopcionSerializer(solicitudes, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        solicitudes = SolicitudAdopcion.objects.select_related('adoptante','mascota')
+
+        estado = request.query_params.get('estado')
+        adoptante = request.query_params.get('adoptante')
+        mascotas = request.query_params.get('mascota')
+
+        if estado:
+            solicitudes = solicitudes.filter(estado=estado)
+        if adoptante:
+            if not adoptante.isdigit():
+                return Response({'error': 'El parámetro adoptante debe ser un número (id) .'}, status=status.HTTP_400_BAD_REQUEST)
+            solicitudes = solicitudes.filter(adoptante=adoptante)
+        if mascotas:
+            if not mascotas.isdigit():
+                return Response({'error': 'El parámetro mascota debe ser un número (id) .'}, status=status.HTTP_400_BAD_REQUEST)
+            solicitudes = solicitudes.filter(mascota=mascotas)
+            
+        solicitudes = solicitudes.order_by('-fecha', '-id')
+        return paginar(solicitudes, request, SolicitudAdopcionSerializer)
 
     error = verificar_permiso(request.user, request.method)
     if error:
