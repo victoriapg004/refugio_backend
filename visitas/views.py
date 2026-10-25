@@ -1,6 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
+from config.permisos import verificar_permiso
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -18,8 +20,9 @@ def visitas_api(request):
         serializer = VisitaSerializer(visitas, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     serializer = VisitaSerializer(data=request.data)
     if serializer.is_valid():
@@ -40,8 +43,9 @@ def visita_detalle_api(request, id):
     if request.method == 'GET':
         return Response(VisitaSerializer(visita).data)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     if request.method in ['PUT', 'PATCH']:
         serializer = VisitaSerializer(visita, data=request.data, partial=(request.method == 'PATCH'))

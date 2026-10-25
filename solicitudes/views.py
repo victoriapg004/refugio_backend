@@ -1,3 +1,5 @@
+from config.permisos import verificar_permiso
+
 from django.db.models import ProtectedError
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -14,8 +16,9 @@ def solicitudes_api(request):
         serializer = SolicitudAdopcionSerializer(solicitudes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     serializer = SolicitudAdopcionSerializer(data=request.data)
     if serializer.is_valid():
@@ -34,8 +37,9 @@ def solicitud_detalle_api(request, id):
     if request.method == 'GET':
         return Response(SolicitudAdopcionSerializer(solicitud).data)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     if request.method in ['PUT', 'PATCH']:
         serializer = SolicitudAdopcionSerializer(solicitud, data=request.data, partial=(request.method == 'PATCH'))
