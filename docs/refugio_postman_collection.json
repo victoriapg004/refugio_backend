@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Refugio API",
-    "description": "API REST del refugio de mascotas. Ejecutar primero la carpeta Auth y luego las demás en orden.",
+    "description": "API REST del refugio de mascotas. Ejecutar primero la carpeta Auth. El usuario operador debe pertenecer al grupo Operador.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "auth": {
@@ -83,7 +83,7 @@
                 ""
               ]
             },
-            "description": "Guarda el token en la variable token.",
+            "description": "Resultado esperado: 200. Guarda el token en la variable token. Cambiar el usuario si el administrador tiene otro nombre.",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"vicpg\",\n  \"password\": \"{{admin_password}}\"\n}",
@@ -131,7 +131,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200",
+            "description": "Resultado esperado: 200. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"operador\",\n  \"password\": \"Refugio2026*\"\n}",
@@ -179,7 +179,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200",
+            "description": "Resultado esperado: 200. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"consulta\",\n  \"password\": \"Huellas2026*\"\n}",
@@ -226,7 +226,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"operador\",\n  \"password\": \"mala\"\n}",
@@ -247,7 +247,7 @@
       "name": "Mascotas",
       "item": [
         {
-          "name": "Mascotas - listar",
+          "name": "Mascotas - listar (paginado)",
           "event": [
             {
               "listen": "test",
@@ -273,7 +273,191 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200"
+            "description": "Resultado esperado: 200. "
+          }
+        },
+        {
+          "name": "Mascotas - página 2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/?pagina=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "Resultado esperado: 200. "
+          }
+        },
+        {
+          "name": "Mascotas - filtros combinados",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/?especie=perro&estado=disponible",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "especie",
+                  "value": "perro"
+                },
+                {
+                  "key": "estado",
+                  "value": "disponible"
+                }
+              ]
+            },
+            "description": "Resultado esperado: 200. "
+          }
+        },
+        {
+          "name": "Mascotas - búsqueda",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/?buscar=siam",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "buscar",
+                  "value": "siam"
+                }
+              ]
+            },
+            "description": "Resultado esperado: 200. Busca por nombre o raza."
+          }
+        },
+        {
+          "name": "Mascotas - orden descendente por edad",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/?orden=-edad",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "orden",
+                  "value": "-edad"
+                }
+              ]
+            },
+            "description": "Resultado esperado: 200. "
+          }
+        },
+        {
+          "name": "Mascotas - orden inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/?orden=color",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "orden",
+                  "value": "color"
+                }
+              ]
+            },
+            "description": "Resultado esperado: 400. "
           }
         },
         {
@@ -304,7 +488,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200"
+            "description": "Resultado esperado: 200. "
           }
         },
         {
@@ -335,7 +519,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 404"
+            "description": "Resultado esperado: 404. "
           }
         },
         {
@@ -346,7 +530,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                  "pm.test('Código 401', function () { pm.response.to.have.status(401); });"
                 ]
               }
             }
@@ -370,7 +554,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 403",
+            "description": "Resultado esperado: 401. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Nala\",\n  \"especie\": \"gato\",\n  \"raza\": \"Criollo\",\n  \"edad\": 6,\n  \"estado\": \"disponible\"\n}",
@@ -386,7 +570,7 @@
           }
         },
         {
-          "name": "Mascotas - POST operador",
+          "name": "Mascotas - POST consulta",
           "event": [
             {
               "listen": "test",
@@ -417,7 +601,72 @@
                 ""
               ]
             },
-            "description": "Resultado esperado hoy: 403. Cuando se configuren los permisos por rol debería pasar a 201.",
+            "description": "Resultado esperado: 403. ",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Nala\",\n  \"especie\": \"gato\",\n  \"raza\": \"Criollo\",\n  \"edad\": 6,\n  \"estado\": \"disponible\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "Token {{token_consulta}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mascotas - POST operador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('mascota_id', pm.response.json().id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 201. Requiere que operador esté en el grupo Operador.",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Nala\",\n  \"especie\": \"gato\",\n  \"raza\": \"Criollo\",\n  \"edad\": 6,\n  \"estado\": \"disponible\"\n}",
@@ -458,7 +707,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('Código 201', function () { pm.response.to.have.status(201); });",
-                  "if (pm.response.code < 300) { pm.collectionVariables.set('mascota_id', pm.response.json().id); }"
+                  "if (pm.response.code < 300) { pm.collectionVariables.set('mascota_admin_id', pm.response.json().id); }"
                 ]
               }
             }
@@ -482,7 +731,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 201",
+            "description": "Resultado esperado: 201. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Nala\",\n  \"especie\": \"gato\",\n  \"raza\": \"Criollo\",\n  \"edad\": 6,\n  \"estado\": \"disponible\"\n}",
@@ -526,7 +775,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Pez\",\n  \"especie\": \"pez\",\n  \"edad\": 1\n}",
@@ -539,7 +788,51 @@
           }
         },
         {
-          "name": "Mascotas - PATCH edad",
+          "name": "Mascotas - regla edad cero",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400. Regla 9.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Test\",\n  \"especie\": \"gato\",\n  \"edad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Mascotas - PATCH operador",
           "event": [
             {
               "listen": "test",
@@ -571,7 +864,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200",
+            "description": "Resultado esperado: 200. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"edad\": 7\n}",
@@ -580,6 +873,26 @@
                   "language": "json"
                 }
               }
+            },
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "Token {{token_operador}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -616,7 +929,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"estado\": \"volando\"\n}",
@@ -625,6 +938,57 @@
                   "language": "json"
                 }
               }
+            }
+          }
+        },
+        {
+          "name": "Mascotas - DELETE operador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/{{mascota_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "{{mascota_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 403. El operador no puede borrar.",
+            "auth": {
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "Token {{token_operador}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -656,11 +1020,11 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 409"
+            "description": "Resultado esperado: 409. "
           }
         },
         {
-          "name": "Mascotas - DELETE sin relaciones",
+          "name": "Mascotas - DELETE administrador",
           "event": [
             {
               "listen": "test",
@@ -687,7 +1051,38 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 204"
+            "description": "Resultado esperado: 204. "
+          }
+        },
+        {
+          "name": "Mascotas - DELETE administrador (2)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mascotas/{{mascota_admin_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "mascotas",
+                "{{mascota_admin_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 204. "
           }
         }
       ]
@@ -722,7 +1117,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200"
+            "description": "Resultado esperado: 200. "
           }
         },
         {
@@ -753,11 +1148,58 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 404"
+            "description": "Resultado esperado: 404. "
           }
         },
         {
           "name": "Adoptantes - POST sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 401', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/adoptantes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "adoptantes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 401. ",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana Lucía Vargas\",\n  \"cedula\": \"1-1111-2222\",\n  \"correo\": \"ana.vargas@example.com\",\n  \"telefono\": \"8555-4444\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Adoptantes - POST consulta",
           "event": [
             {
               "listen": "test",
@@ -788,7 +1230,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 403",
+            "description": "Resultado esperado: 403. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Ana Lucía Vargas\",\n  \"cedula\": \"1-1111-2222\",\n  \"correo\": \"ana.vargas@example.com\",\n  \"telefono\": \"8555-4444\"\n}",
@@ -799,7 +1241,24 @@
               }
             },
             "auth": {
-              "type": "noauth"
+              "type": "apikey",
+              "apikey": [
+                {
+                  "key": "key",
+                  "value": "Authorization",
+                  "type": "string"
+                },
+                {
+                  "key": "value",
+                  "value": "Token {{token_consulta}}",
+                  "type": "string"
+                },
+                {
+                  "key": "in",
+                  "value": "header",
+                  "type": "string"
+                }
+              ]
             }
           }
         },
@@ -836,7 +1295,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 201",
+            "description": "Resultado esperado: 201. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Ana Lucía Vargas\",\n  \"cedula\": \"1-1111-2222\",\n  \"correo\": \"ana.vargas@example.com\",\n  \"telefono\": \"8555-4444\"\n}",
@@ -880,10 +1339,10 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Otra Persona\",\n  \"cedula\": \"1-1111-2222\",\n  \"correo\": \"otra@example.com\",\n  \"telefono\": \"8000-0000\"\n}",
+              "raw": "{\n  \"nombre\": \"Ana Lucía Vargas\",\n  \"cedula\": \"1-1111-2222\",\n  \"correo\": \"otra@example.com\",\n  \"telefono\": \"8555-4444\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -924,10 +1383,10 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nombre\": \"Otra Persona\",\n  \"cedula\": \"9-9999-9999\",\n  \"correo\": \"hola\",\n  \"telefono\": \"8000-0000\"\n}",
+              "raw": "{\n  \"nombre\": \"Prueba\",\n  \"cedula\": \"9-9999-9999\",\n  \"correo\": \"hola\",\n  \"telefono\": \"8000-0000\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -969,7 +1428,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200",
+            "description": "Resultado esperado: 200. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"direccion\": \"Orotina, Centro\"\n}",
@@ -1009,7 +1468,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 409"
+            "description": "Resultado esperado: 409. "
           }
         },
         {
@@ -1040,7 +1499,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 204"
+            "description": "Resultado esperado: 204. "
           }
         }
       ]
@@ -1049,7 +1508,7 @@
       "name": "Solicitudes",
       "item": [
         {
-          "name": "Solicitudes - listar",
+          "name": "Solicitudes - listar (paginado)",
           "event": [
             {
               "listen": "test",
@@ -1075,7 +1534,83 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200"
+            "description": "Resultado esperado: 200. "
+          }
+        },
+        {
+          "name": "Solicitudes - filtros combinados",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/?estado=pendiente&adoptante=2",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "estado",
+                  "value": "pendiente"
+                },
+                {
+                  "key": "adoptante",
+                  "value": "2"
+                }
+              ]
+            },
+            "description": "Resultado esperado: 200. "
+          }
+        },
+        {
+          "name": "Solicitudes - filtro con id inválido",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/?adoptante=abc",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "adoptante",
+                  "value": "abc"
+                }
+              ]
+            },
+            "description": "Resultado esperado: 400. "
           }
         },
         {
@@ -1106,7 +1641,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 404"
+            "description": "Resultado esperado: 404. "
           }
         },
         {
@@ -1117,7 +1652,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                  "pm.test('Código 401', function () { pm.response.to.have.status(401); });"
                 ]
               }
             }
@@ -1141,10 +1676,10 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 403",
+            "description": "Resultado esperado: 401. ",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 1,\n  \"motivo\": \"Quiero adoptar\"\n}",
+              "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 1,\n  \"motivo\": \"x\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1189,10 +1724,98 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 201",
+            "description": "Resultado esperado: 201. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 1,\n  \"motivo\": \"Quiero adoptar un perro pequeño\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Solicitudes - regla pendiente duplicada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400. Regla 4.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 1,\n  \"motivo\": \"x\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Solicitudes - regla mascota adoptada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400. Regla 1 (Luna está adoptada).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 3,\n  \"motivo\": \"x\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1233,7 +1856,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"adoptante\": 3,\n  \"mascota\": 999,\n  \"motivo\": \"x\"\n}",
@@ -1246,7 +1869,52 @@
           }
         },
         {
-          "name": "Solicitudes - PATCH estado",
+          "name": "Solicitudes - regla aprobar sin visita realizada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/solicitudes/{{solicitud_id}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "solicitudes",
+                "{{solicitud_id}}",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400. Regla 2.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"aprobada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Solicitudes - PATCH estado rechazada",
           "event": [
             {
               "listen": "test",
@@ -1278,10 +1946,10 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200",
+            "description": "Resultado esperado: 200. ",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"estado\": \"aprobada\"\n}",
+              "raw": "{\n  \"estado\": \"rechazada\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1323,7 +1991,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"estado\": \"x\"\n}",
@@ -1363,7 +2031,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 409"
+            "description": "Resultado esperado: 409. "
           }
         },
         {
@@ -1394,7 +2062,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 204"
+            "description": "Resultado esperado: 204. "
           }
         }
       ]
@@ -1429,7 +2097,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200"
+            "description": "Resultado esperado: 200. "
           }
         },
         {
@@ -1460,7 +2128,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 404"
+            "description": "Resultado esperado: 404. "
           }
         },
         {
@@ -1471,7 +2139,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                  "pm.test('Código 401', function () { pm.response.to.have.status(401); });"
                 ]
               }
             }
@@ -1495,10 +2163,10 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 403",
+            "description": "Resultado esperado: 401. ",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"2026-10-30T10:00:00\"\n}",
+              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"2027-01-15T10:00:00\",\n  \"observaciones\": \"Visita de seguimiento\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1543,10 +2211,10 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 201",
+            "description": "Resultado esperado: 201. ",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"2026-10-30T10:00:00\",\n  \"observaciones\": \"Visita de seguimiento\"\n}",
+              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"2027-01-15T10:00:00\",\n  \"observaciones\": \"Visita de seguimiento\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1556,7 +2224,7 @@
           }
         },
         {
-          "name": "Visitas - POST solicitud inexistente",
+          "name": "Visitas - regla misma fecha y hora",
           "event": [
             {
               "listen": "test",
@@ -1587,10 +2255,98 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. Regla 6.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"solicitud\": 999,\n  \"fecha_hora\": \"2026-10-30T10:00:00\"\n}",
+              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"2027-01-15T10:00:00\",\n  \"observaciones\": \"Visita de seguimiento\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Visitas - regla fecha en el pasado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400. Regla 5.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"2020-01-01T10:00:00\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Visitas - regla solicitud rechazada",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/visitas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "visitas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400. Regla 7 (la solicitud 3 está rechazada).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"solicitud\": 3,\n  \"fecha_hora\": \"2027-02-01T10:00:00\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1631,7 +2387,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"solicitud\": 2,\n  \"fecha_hora\": \"mañana\"\n}",
@@ -1676,7 +2432,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200",
+            "description": "Resultado esperado: 200. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"estado\": \"realizada\"\n}",
@@ -1716,7 +2472,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 204"
+            "description": "Resultado esperado: 204. "
           }
         }
       ]
@@ -1752,7 +2508,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200"
+            "description": "Resultado esperado: 200. "
           }
         },
         {
@@ -1784,7 +2540,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 404"
+            "description": "Resultado esperado: 404. "
           }
         },
         {
@@ -1795,7 +2551,7 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test('Código 403', function () { pm.response.to.have.status(403); });"
+                  "pm.test('Código 401', function () { pm.response.to.have.status(401); });"
                 ]
               }
             }
@@ -1820,7 +2576,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 403",
+            "description": "Resultado esperado: 401. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Leptospirosis\"\n}",
@@ -1869,7 +2625,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 201",
+            "description": "Resultado esperado: 201. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Leptospirosis\"\n}",
@@ -1914,7 +2670,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"nombre\": \"Rabia\"\n}",
@@ -1955,7 +2711,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 409"
+            "description": "Resultado esperado: 409. "
           }
         },
         {
@@ -1986,7 +2742,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200"
+            "description": "Resultado esperado: 200. "
           }
         },
         {
@@ -2023,7 +2779,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 201",
+            "description": "Resultado esperado: 201. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"mascota\": 3,\n  \"vacuna\": \"{{vacuna_id}}\",\n  \"fecha_aplicacion\": \"2026-10-20\",\n  \"observaciones\": \"Primera dosis\"\n}",
@@ -2068,10 +2824,55 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 400",
+            "description": "Resultado esperado: 400. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"mascota\": 3,\n  \"vacuna\": \"{{vacuna_id}}\",\n  \"fecha_aplicacion\": \"2026-10-20\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Registros - regla fecha futura",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 400', function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/salud/registros/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "salud",
+                "registros",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 400. Regla 8.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mascota\": 3,\n  \"vacuna\": \"{{vacuna_id}}\",\n  \"fecha_aplicacion\": \"2030-01-01\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2114,7 +2915,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 200",
+            "description": "Resultado esperado: 200. ",
             "body": {
               "mode": "raw",
               "raw": "{\n  \"observaciones\": \"Sin reacción\"\n}",
@@ -2155,7 +2956,7 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 204"
+            "description": "Resultado esperado: 204. "
           }
         },
         {
@@ -2187,7 +2988,75 @@
                 ""
               ]
             },
-            "description": "Resultado esperado: 204"
+            "description": "Resultado esperado: 204. "
+          }
+        }
+      ]
+    },
+    {
+      "name": "Estadísticas",
+      "item": [
+        {
+          "name": "Estadísticas - sin token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 401', function () { pm.response.to.have.status(401); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/estadisticas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "estadisticas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 401. ",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Estadísticas - autenticado",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Código 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/estadisticas/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "estadisticas",
+                ""
+              ]
+            },
+            "description": "Resultado esperado: 200. Devuelve las 6 consultas ORM."
           }
         }
       ]
