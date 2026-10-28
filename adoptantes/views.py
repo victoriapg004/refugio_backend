@@ -1,3 +1,7 @@
+from django.http import request
+
+from config.permisos import verificar_permiso
+
 from django.db.models import ProtectedError
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -14,8 +18,9 @@ def adoptantes_api(request):
         serializer = AdoptanteSerializer(adoptantes, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     serializer = AdoptanteSerializer(data=request.data)
     if serializer.is_valid():
@@ -34,8 +39,9 @@ def adoptante_detalle_api(request, id):
     if request.method == 'GET':
         return Response(AdoptanteSerializer(adoptante).data)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     if request.method in ['PUT', 'PATCH']:
         serializer = AdoptanteSerializer(adoptante, data=request.data, partial=(request.method == 'PATCH'))

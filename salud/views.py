@@ -1,6 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
+from config.permisos import verificar_permiso
+
 from django.db.models import ProtectedError
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -17,8 +19,9 @@ def vacunas_api(request):
         serializer = VacunaSerializer(vacunas, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     serializer = VacunaSerializer(data=request.data)
     if serializer.is_valid():
@@ -37,8 +40,9 @@ def vacuna_detalle_api(request, id):
     if request.method == 'GET':
         return Response(VacunaSerializer(vacuna).data)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     if request.method in ['PUT', 'PATCH']:
         serializer = VacunaSerializer(vacuna, data=request.data, partial=(request.method == 'PATCH'))
@@ -66,8 +70,9 @@ def registros_api(request):
         serializer = RegistroVacunacionSerializer(registros, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     serializer = RegistroVacunacionSerializer(data=request.data)
     if serializer.is_valid():
@@ -86,8 +91,9 @@ def registro_detalle_api(request, id):
     if request.method == 'GET':
         return Response(RegistroVacunacionSerializer(registro).data)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     if request.method in ['PUT', 'PATCH']:
         serializer = RegistroVacunacionSerializer(registro, data=request.data, partial=(request.method == 'PATCH'))

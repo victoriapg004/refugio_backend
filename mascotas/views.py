@@ -1,7 +1,10 @@
 from django.shortcuts import render
 
 # Create your views here.
-from django.db.models import ProtectedError
+from config.permisos import verificar_permiso
+from config.paginacion import paginar
+
+from django.db.models import ProtectedError, Q
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -13,12 +16,33 @@ from .serializers import MascotaSerializer
 @api_view(['GET', 'POST'])
 def mascotas_api(request):
     if request.method == 'GET':
-        mascotas = Mascota.objects.order_by('nombre')
-        serializer = MascotaSerializer(mascotas, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        mascotas = Mascota.objects.all()
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+        #Filtros combinables
+        especie = request.query_params.get('especie')
+        estado = request.query_params.get('estado')
+        if especie:
+            mascotas = mascotas.filter(especie=especie)
+        if estado:
+            mascotas = mascotas.filter(estado=estado)
+
+        #Busqueda por nombre o raza
+        buscar = request.query_params.get('buscar')
+        if buscar:
+            mascotas = mascotas.filter(Q(nombre__icontains=buscar) | Q(raza__icontains=buscar))
+
+        #Ordenamineto (solo los campos permitidos)
+        orden = request.query_params.get('orden','nombre')
+        campos_permitidos = ['nombre','edad', 'fecha_ingreso']
+        if orden.lstrip('-') not in campos_permitidos:
+            return Response({'error': 'Orden invalido. '}, status=status.HTTP_400_BAD_REQUEST)
+        mascotas = mascotas.order_by(orden, 'id')
+
+        return paginar(mascotas, request, MascotaSerializer)
+
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     serializer = MascotaSerializer(data=request.data)
     if serializer.is_valid():
@@ -37,8 +61,9 @@ def mascota_detalle_api(request, id):
     if request.method == 'GET':
         return Response(MascotaSerializer(mascota).data)
 
-    if not request.user.is_authenticated or not request.user.is_staff:
-        return Response({'detail': 'Se requiere un usuario administrador.'}, status=status.HTTP_403_FORBIDDEN)
+    error = verificar_permiso(request.user, request.method)
+    if error:
+        return error
 
     if request.method in ['PUT', 'PATCH']:
         serializer = MascotaSerializer(mascota, data=request.data, partial=(request.method == 'PATCH'))
