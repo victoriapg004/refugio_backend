@@ -31,7 +31,7 @@ class SolicitudAdopcionSerializer(serializers.ModelSerializer):
             #R2:Para aprobar  que debe existir al menos una visita realizada
             if instancia is None or instancia.estado != 'aprobada':
                  if instancia is None or not instancia.visitas.filter(estado='realizada').exists():
-                     raise self.serializers.ValidationError({'estado':'No se puede aprobar una solicitud sin al menos una visita realizada.'})
+                     raise serializers.ValidationError({'estado':'No se puede aprobar una solicitud sin al menos una visita realizada.'})
                  
             #R3: Una mascota no puede tener dos solicitudes aprobadas
             if mascota:
