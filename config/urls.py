@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from config.views import estadisticas_api
 from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
@@ -26,4 +27,5 @@ urlpatterns = [
     path('api/solicitudes/', include('solicitudes.urls')),
     path('api/visitas/', include('visitas.urls')),
     path('api/salud/', include('salud.urls')),
+    path('api/estadisticas/', estadisticas_api, name='api_estadisticas'),
 ]
