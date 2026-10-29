@@ -120,6 +120,7 @@ Limitaciones conocidas
 - La base de datos requiere MySQL configurado localmente y permisos adicionales para ejecutar las pruebas.
 - No hay recuperación automática de contraseñas por correo.
 Documentación técnica
-Consulta docs/documentacion_tecnica.md para la matriz de permisos, las diez reglas de negocio y el catálogo de endpoints. El diagrama entidad-relación debe exportarse desde MySQL Workbench mediante Database → Reverse Engineer y guardarse como docs/diagrama_er.png.
+La documentación técnica del proyecto se encuentra en docs/documentacion_tecnica.md. Este archivo contiene el diagrama entidad-relación, la matriz de permisos, las 10 reglas de negocio y el catálogo de endpoints con sus respectivos parámetros de consulta.
+El diagrama entidad-relación fue generado mediante MySQL Workbench utilizando la opción Database -> Reverse Engineer sobre la base de datos refugio_db. La imagen se encuentra en docs/diagrama_er.png y el modelo editable en docs/diagrama.mwb.
 Trabajo en equipo
 Proyecto desarrollado de manera colaborativa. Las modificaciones se registran mediante commits y pull requests en GitHub para su revisión antes de integrarse a main.
