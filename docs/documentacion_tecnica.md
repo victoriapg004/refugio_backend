@@ -163,3 +163,8 @@ GET /api/estadisticas/
 Authorization: Token TU_TOKEN
 
 Las respuestas paginadas incluyen pagina_actual, total_paginas, total_registros y resultados (config/paginacion.py). Las consultas estadísticas están implementadas en config/views.py.
+
+AJUSTES PARA EL FRONTEND
+
+CORS: el frontend en React VITE corre en http://localhost:5173 y consume la API en http://127.0.0.1:8000
+Para que funcionara en el navegador correctamente se instaló django-cors-headers, se agregó 'corsheaders' a INSTALLED_APPS, 'corsheaders.middleware.CorsMiddleware' en MIDDLEWARE y se definió CORS_ALLOWED_ORIGINS con las dos direcciones del frontend (localhost y 127.0.0.1, puerto 5173).
