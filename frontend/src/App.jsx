@@ -7,18 +7,21 @@ import ListaAdoptantes from './pages/adoptantes/ListaAdoptantes.jsx'
 import ListaSolicitudes from './pages/solicitudes/ListaSolicitudes.jsx'
 import ListaVisitas from './pages/visitas/ListaVisitas.jsx'
 import ListaSalud from './pages/salud/ListaSalud.jsx'
+import RutaProtegida from './components/RutaProtegida.jsx'
 
 function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route element={<Layout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/mascotas" element={<ListaMascotas />} />
-        <Route path="/adoptantes" element={<ListaAdoptantes />} />
-        <Route path="/solicitudes" element={<ListaSolicitudes />} />
-        <Route path="/visitas" element={<ListaVisitas />} />
-        <Route path="/salud" element={<ListaSalud />} />
+      <Route element={<RutaProtegida />}>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/mascotas" element={<ListaMascotas />} />
+          <Route path="/adoptantes" element={<ListaAdoptantes />} />
+          <Route path="/solicitudes" element={<ListaSolicitudes />} />
+          <Route path="/visitas" element={<ListaVisitas />} />
+          <Route path="/salud" element={<ListaSalud />} />
+        </Route>
       </Route>
     </Routes>
   )
