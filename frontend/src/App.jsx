@@ -1,0 +1,27 @@
+import { Routes, Route } from 'react-router-dom'
+import Layout from './components/Layout.jsx'
+import Dashboard from './pages/Dashboard.jsx'
+import Login from './pages/Login.jsx'
+import ListaMascotas from './pages/mascotas/ListaMascotas.jsx'
+import ListaAdoptantes from './pages/adoptantes/ListaAdoptantes.jsx'
+import ListaSolicitudes from './pages/solicitudes/ListaSolicitudes.jsx'
+import ListaVisitas from './pages/visitas/ListaVisitas.jsx'
+import ListaSalud from './pages/salud/ListaSalud.jsx'
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route element={<Layout />}>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/mascotas" element={<ListaMascotas />} />
+        <Route path="/adoptantes" element={<ListaAdoptantes />} />
+        <Route path="/solicitudes" element={<ListaSolicitudes />} />
+        <Route path="/visitas" element={<ListaVisitas />} />
+        <Route path="/salud" element={<ListaSalud />} />
+      </Route>
+    </Routes>
+  )
+}
+
+export default App
