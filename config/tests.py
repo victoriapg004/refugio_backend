@@ -20,3 +20,31 @@ class EstadisticasTests(BaseAPITestCase):
             'mascotas_con_sus_vacunas',
         ]:
             self.assertIn(clave, r.data)
+
+class PerfilTests(BaseAPITestCase):
+
+    def test_perfil_sin_token_da_401(self):
+        self.assertEqual(self.client.get('/api/perfil/').status_code, 401)
+
+    def test_perfil_administrador(self):
+        self.como(self.admin)
+        r = self.client.get('/api/perfil/')
+        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.data['rol'], 'administrador')
+        self.assertTrue(r.data['puede_borrar'])
+
+    def test_perfil_operador(self):
+        self.como(self.operador)
+        r = self.client.get('/api/perfil/')
+        self.assertEqual(r.data['rol'], 'operador')
+        self.assertTrue(r.data['puede_crear'])
+        self.assertTrue(r.data['puede_editar'])
+        self.assertFalse(r.data['puede_borrar'])
+
+    def test_perfil_consulta(self):
+        self.como(self.consulta)
+        r = self.client.get('/api/perfil/')
+        self.assertEqual(r.data['rol'], 'consulta')
+        self.assertFalse(r.data['puede_crear'])
+        self.assertFalse(r.data['puede_editar'])
+        self.assertFalse(r.data['puede_borrar'])

@@ -144,6 +144,7 @@ PUT/PATCH /api/salud/registros/{id}/ — modifica un registro.
 DELETE /api/salud/registros/{id}/ — elimina un registro según permisos.
 4.8 Estadísticas
 GET /api/estadisticas/ — presenta estadísticas agregadas del refugio, como mascotas disponibles por especie, solicitudes, aplicaciones de vacunas y próximas visitas. Requiere autenticación.
+GET /api/perfil/ — devuelve username, rol (administrador, operador o consulta) y las banderas puede_crear, puede_editar y puede_borrar del usuario autenticado. Requiere token; sin token responde 401.
 4.9 Ejemplos de consultas
 Mascotas disponibles de especie gato:
 
