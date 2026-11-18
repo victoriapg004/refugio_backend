@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext.jsx'
 
 const enlaces = [
   { ruta: '/', texto: 'Dashboard' },
@@ -10,6 +11,14 @@ const enlaces = [
 ]
 
 function Layout() {
+  const { perfil, logout } = useAuth()
+  const navigate = useNavigate()
+
+  function cerrarSesion() {
+    logout()
+    navigate('/login', { replace: true })
+  }
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -40,6 +49,13 @@ function Layout() {
                 </li>
               ))}
             </ul>
+            <div className="d-flex align-items-center gap-2">
+              <span className="navbar-text text-white">{perfil?.username}</span>
+              <span className="badge text-bg-info text-capitalize">{perfil?.rol}</span>
+              <button className="btn btn-outline-light btn-sm" onClick={cerrarSesion}>
+                Cerrar sesión
+              </button>
+            </div>
           </div>
         </div>
       </nav>

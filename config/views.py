@@ -108,3 +108,29 @@ def estadisticas_api(request):
         'proximas_visitas': proximas_visitas,
         'mascotas_con_sus_vacunas': mascotas_con_vacunas,
     }, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def perfil_api(request):
+    
+    if not request.user.is_authenticated:
+        return Response(
+            {'detail': 'Debe autenticarse para ver el perfil.'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
+
+    usuario = request.user
+    
+    if usuario.is_staff:
+        rol = 'administrador'
+    elif usuario.groups.filter(name='Operador').exists():
+        rol = 'operador'
+    else:
+        rol = 'consulta'
+
+    return Response({
+        'username': usuario.username,
+        'rol': rol,
+        'puede_crear': rol in ('administrador', 'operador'),   # POST
+        'puede_editar': rol in ('administrador', 'operador'),  # PUT/PATCH
+        'puede_borrar': rol == 'administrador',                # DELETE
+    }, status=status.HTTP_200_OK)
