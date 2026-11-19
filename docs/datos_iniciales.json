@@ -9,7 +9,7 @@
     "edad": 25,
     "descripcion": "Toby es un perrito cariñoso, juguetón y muy amigable. Tiene aproximadamente 2 años, de tamaño mediano.",
     "estado": "disponible",
-    "fecha_ingreso": "2026-10-21"
+    "fecha_ingreso": "2026-11-21"
   }
 },
 {
@@ -22,7 +22,7 @@
     "edad": 12,
     "descripcion": "Leo es un perrito mestizo de 1 año, de tamaño pequeño, es alegre, curioso y lleno de energía.",
     "estado": "en_proceso",
-    "fecha_ingreso": "2026-10-21"
+    "fecha_ingreso": "2026-12-21"
   }
 },
 {
@@ -35,7 +35,7 @@
     "edad": 10,
     "descripcion": "Luna es una hermosa gatita siamesa de 10 meses. Es curiosa, dulce y juguetona.",
     "estado": "adoptada",
-    "fecha_ingreso": "2026-10-21"
+    "fecha_ingreso": "2026-11-21"
   }
 },
 {
@@ -48,7 +48,7 @@
     "edad": 18,
     "descripcion": "Coco es un perrito chihuahua, de un año y medio. Le encantan los huesos y esconder calcetines.",
     "estado": "disponible",
-    "fecha_ingreso": "2026-10-21"
+    "fecha_ingreso": "2026-12-21"
   }
 },
 {
@@ -101,7 +101,7 @@
   "fields": {
     "adoptante": 1,
     "mascota": 3,
-    "fecha": "2026-10-21",
+    "fecha": "2026-11-21",
     "estado": "aprobada",
     "motivo": "Quiero darle un hogar a una gata tranquila"
   }
@@ -112,7 +112,7 @@
   "fields": {
     "adoptante": 2,
     "mascota": 2,
-    "fecha": "2026-10-21",
+    "fecha": "2026-12-21",
     "estado": "aprobada",
     "motivo": "Busco un compañero para mi familia"
   }
