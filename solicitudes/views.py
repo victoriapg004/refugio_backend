@@ -31,7 +31,12 @@ def solicitudes_api(request):
             solicitudes = solicitudes.filter(mascota=mascotas)
             
         solicitudes = solicitudes.order_by('-fecha', '-id')
+        
+        if request.query_params.get('todos') == '1':
+            return Response(SolicitudAdopcionSerializer(solicitudes, many=True).data)
+
         return paginar(solicitudes, request, SolicitudAdopcionSerializer)
+
 
     error = verificar_permiso(request.user, request.method)
     if error:

@@ -51,3 +51,17 @@ class SolicitudReglasTests(BaseAPITestCase):
         self.assertEqual(r.status_code, 200)
         self.mascota.refresh_from_db()
         self.assertEqual(self.mascota.estado, 'adoptada')
+
+    
+    def test_todos_devuelve_solicitudes_sin_paginar(self):
+        for i in range(7):
+            adoptante = Adoptante.objects.create(nombre=f'Persona{i}',cedula=f'2-{i:08d}',correo=f'persona{i}@test.com')
+            SolicitudAdopcion.objects.create(adoptante=adoptante,mascota=self.mascota)
+        respuesta = self.client.get('/api/solicitudes/?todos=1&estado=pendiente')
+
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertIsInstance(respuesta.data, list)
+        self.assertEqual(len(respuesta.data), 7)
+
+        normal = self.client.get('/api/solicitudes/')
+        self.assertEqual(len(normal.data['resultados']), 5)

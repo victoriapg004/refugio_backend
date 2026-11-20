@@ -107,3 +107,18 @@ class MascotaTests(BaseAPITestCase):
         r = self.client.post('/api/mascotas/', {'nombre': 'Test', 'especie': 'gato', 'edad': 0}, format='json')
         self.assertEqual(r.status_code, 400)
         self.assertIn('edad', r.data)
+    # ------- registros filtrados sin paginar ---------
+    def test_todos_devuelve_mascotas_sin_paginar(self):
+        for i in range(7):
+            self.crear_mascota(nombre=f'Gato{i}')
+
+        self.crear_mascota('Rex', 'perro')
+
+        respuesta = self.client.get('/api/mascotas/?todos=1&especie=gato')
+        
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertIsInstance(respuesta.data, list)
+        self.assertEqual(len(respuesta.data), 7)
+
+        normal = self.client.get('/api/mascotas/')
+        self.assertEqual(len(normal.data['resultados']), 5)
