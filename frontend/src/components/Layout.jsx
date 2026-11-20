@@ -1,5 +1,6 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import Logo from './Logo.jsx'
 
 const enlaces = [
   { ruta: '/', texto: 'Dashboard' },
@@ -23,7 +24,7 @@ function Layout() {
     <>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container">
-          <span className="navbar-brand">Refugio de Mascotas</span>
+          <Logo tamano={34} /> <span className="ms-2">Refugio de Mascotas</span>
           <button
             className="navbar-toggler"
             type="button"

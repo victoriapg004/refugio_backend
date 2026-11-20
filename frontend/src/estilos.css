@@ -1,0 +1,211 @@
+
+/* --- Colores base Bootstrap --- */
+:root,
+[data-bs-theme="light"] {
+  color-scheme: dark;
+  --bs-body-bg: #f3f7cbd4;
+  --bs-body-bg-rgb: 255, 246, 239;
+  --bs-body-color: #5777a7;
+  --bs-body-color-rgb: 74, 59, 82;
+  --bs-heading-color: #4b8394;
+  --bs-emphasis-color: #5777a7;
+  --bs-emphasis-color-rgb: 47, 36, 56;
+  --bs-secondary-color: rgba(59, 90, 152, 0.938);
+  --bs-secondary-bg: #dbe7f9;
+  --bs-tertiary-bg: #e6f5a4;
+  --bs-tertiary-bg-rgb: 251, 238, 228;
+  --bs-border-color: #337be7;
+  --bs-primary: #ef6a4c;
+  --bs-primary-rgb: 55, 92, 144;
+  --bs-link-color: #375c90;
+  --bs-link-color-rgb: 217, 80, 47;
+  --bs-link-hover-color: #375c90;
+  --bs-link-hover-color-rgb: 184, 61, 32;
+}
+
+/* --- Fondo --- */
+body {
+  min-height: 100vh;
+  background: #bccfffef;
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+/* --- Barra superior --- */
+.navbar {
+  --bs-navbar-color: rgba(55, 75, 110, 0.88);
+  --bs-navbar-hover-color: #c1884b;
+  --bs-navbar-active-color: #3a5a89;
+  --bs-navbar-brand-color: #313971;
+  --bs-navbar-brand-hover-color: #966216;
+  background: #c2d8ff !important;
+  box-shadow: 0 4px 14px rgba(72, 131, 161, 0.25);
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+
+.navbar .nav-link {
+  border-radius: 0.6rem;
+  padding: 0.4rem 0.8rem;
+  transition: background 0.15s ease;
+}
+
+.navbar .nav-link:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.navbar .nav-link.active {
+  background: rgba(255, 255, 255, 0.32);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* --- Botones --- */
+.btn {
+  border-radius: 0.6rem;
+  font-weight: 600;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(239, 106, 76, 0.25);
+}
+
+.btn-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: #7ea0dc;
+  --bs-btn-border-color: #638dbd;
+  --bs-btn-hover-color: #5c9fcc;
+  --bs-btn-hover-bg: #e7f878cf;
+  --bs-btn-hover-border-color: #e7f878cf;
+  --bs-btn-active-bg: #d59e4c;
+  --bs-btn-active-border-color: #c9431f;
+  --bs-btn-disabled-bg: #7ea0dc;
+  --bs-btn-disabled-border-color: #7ea0dc;
+}
+
+.btn-outline-secondary {
+  --bs-btn-color: #68c0fc;
+  --bs-btn-border-color: #68c0fc;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #68c0fc;
+  --bs-btn-hover-border-color: #68c0fc;
+  --bs-btn-active-bg: #f9d06f;
+  --bs-btn-active-border-color: #f9d06f;
+}
+
+/* --- Tarjetas, dashboard etc --- */
+.card {
+  --bs-card-bg: #dbe8f0b0;
+  border-radius: 1rem;
+  border-color: var(--bs-border-color);
+  box-shadow: 0 2px 8px rgba(74, 59, 82, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: #7ea0dc;
+  box-shadow: 0 10px 24px rgba(239, 106, 76, 0.18);
+}
+
+.card-header {
+  background: linear-gradient(90deg, #ece8bc, #f3e2be);
+  font-weight: 600;
+}
+
+/* --- Tablas --- */
+.table-responsive {
+  background: #dbe8f0b0;
+  border-radius: 1rem;
+  padding: 0.5rem 0.75rem;
+  box-shadow: 0 6px 20px rgba(74, 59, 82, 0.08);
+}
+
+.table {
+  --bs-table-bg: transparent;
+  margin-bottom: 0;
+}
+
+.table thead th {
+  color: #5c9fcc;
+  border-bottom: 2px solid #ead9e8;
+}
+
+.table > tbody > tr:hover > * {
+  --bs-table-bg-state: rgba(239, 106, 76, 0.12);
+}
+
+/* --- Formularios, login --- */
+form {
+  background: #ebe69e;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 20px rgba(74, 59, 82, 0.08);
+  animation: aparecer 0.35s ease;
+}
+
+.form-control,
+.form-select {
+  background-color: #fffdfb;
+  border-radius: 0.6rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #7ea0dc;
+  box-shadow: 0 0 0 0.25rem rgba(239, 106, 76, 0.2);
+}
+
+.form-check-input:checked {
+  background-color: #7ea0dc;
+  border-color: #7ea0dc;
+}
+
+/* --- Alertas, modal, paginación --- */
+.alert {
+  border: 0;
+  border-radius: 0.8rem;
+}
+
+.modal-content {
+  border: 0;
+  border-radius: 1rem;
+}
+
+.pagination {
+  --bs-pagination-color: #234a80;
+  --bs-pagination-bg: #dbe7f9;
+  --bs-pagination-hover-color: #e06919;
+  --bs-pagination-focus-color: #c87b48;
+  --bs-pagination-active-bg: #64a9d1dc;
+  --bs-pagination-active-border-color: #7ea0dc;
+}
+
+/* --- Logo --- */
+.logo-huella {
+  transition: transform 0.3s ease;
+}
+
+.logo-huella:hover {
+  transform: rotate(-12deg) scale(1.1);
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

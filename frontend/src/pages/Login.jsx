@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
 import { mensajeError } from '../utils/errores.js'
 import Alerta from '../components/Alerta.jsx'
+import Logo from '../components/Logo.jsx'
 
 function Login() {
   const { login, estaAutenticado } = useAuth()
@@ -35,6 +36,7 @@ function Login() {
 
   return (
     <div className="container py-5" style={{ maxWidth: 420 }}>
+      <div className="text-center mb-2"><Logo tamano={84} /></div>
       <h2 className="mb-4 text-center">Iniciar sesión</h2>
       <Alerta mensaje={error} onCerrar={() => setError('')} />
       <form onSubmit={enviar}>
