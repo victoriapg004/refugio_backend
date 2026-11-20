@@ -6,6 +6,7 @@ import Login from './pages/Login.jsx'
 import ListaMascotas from './pages/mascotas/ListaMascotas.jsx'
 import MascotaForm from './pages/mascotas/MascotaForm.jsx'
 import ListaAdoptantes from './pages/adoptantes/ListaAdoptantes.jsx'
+import AdoptanteForm from './pages/adoptantes/AdoptanteForm.jsx'
 import ListaSolicitudes from './pages/solicitudes/ListaSolicitudes.jsx'
 import ListaVisitas from './pages/visitas/ListaVisitas.jsx'
 import ListaSalud from './pages/salud/ListaSalud.jsx'
@@ -21,6 +22,8 @@ function App() {
           <Route path="/mascotas/nueva" element={<MascotaForm />} />
           <Route path="/mascotas/:id/editar" element={<MascotaForm />} />
           <Route path="/adoptantes" element={<ListaAdoptantes />} />
+          <Route path="/adoptantes/nueva" element={<AdoptanteForm />} />
+          <Route path="/adoptantes/:id/editar" element={<AdoptanteForm />} />
           <Route path="/solicitudes" element={<ListaSolicitudes />} />
           <Route path="/visitas" element={<ListaVisitas />} />
           <Route path="/salud" element={<ListaSalud />} />
