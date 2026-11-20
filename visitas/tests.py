@@ -6,6 +6,7 @@ from adoptantes.models import Adoptante
 from config.base_tests import BaseAPITestCase
 from mascotas.models import Mascota
 from solicitudes.models import SolicitudAdopcion
+from .models import Visita
 
 
 class VisitaReglasTests(BaseAPITestCase):
@@ -39,3 +40,20 @@ class VisitaReglasTests(BaseAPITestCase):
             'solicitud': self.solicitud.id, 'fecha_hora': self.futuro
         }, format='json')
         self.assertEqual(r.status_code, 400)
+    
+    def test_visitas_filtradas_por_solicitud(self):
+        otra_mascota = Mascota.objects.create(nombre='Milo',especie='gato',edad=6)
+        otra_solicitud = SolicitudAdopcion.objects.create(adoptante=self.solicitud.adoptante,mascota=otra_mascota)
+
+        Visita.objects.create(solicitud=self.solicitud,fecha_hora=timezone.now() + timedelta(days=3))
+
+        Visita.objects.create(solicitud=otra_solicitud,fecha_hora=timezone.now() + timedelta(days=4))
+
+        respuesta = self.client.get(f'/api/visitas/?solicitud={self.solicitud.id}')
+
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(len(respuesta.data), 1)
+        self.assertEqual(respuesta.data[0]['solicitud'],self.solicitud.id)
+
+        invalida = self.client.get('/api/visitas/?solicitud=abc')
+        self.assertEqual(invalida.status_code, 400)

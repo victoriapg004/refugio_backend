@@ -37,7 +37,9 @@ def mascotas_api(request):
         if orden.lstrip('-') not in campos_permitidos:
             return Response({'error': 'Orden invalido. '}, status=status.HTTP_400_BAD_REQUEST)
         mascotas = mascotas.order_by(orden, 'id')
-
+        
+        if request.query_params.get('todos') == '1':
+            return Response(MascotaSerializer(mascotas, many=True).data)
         return paginar(mascotas, request, MascotaSerializer)
 
     error = verificar_permiso(request.user, request.method)

@@ -171,3 +171,10 @@ CORS: el frontend en React VITE corre en http://localhost:5173 y consume la API 
 Para que funcionara en el navegador correctamente se instaló django-cors-headers, se agregó 'corsheaders' a INSTALLED_APPS, 'corsheaders.middleware.CorsMiddleware' en MIDDLEWARE y se definió CORS_ALLOWED_ORIGINS con las dos direcciones del frontend (localhost y 127.0.0.1, puerto 5173).
 
 Limitación del cierre de sesión: DRF con TokenAuthentication no revoca el token al cerrar sesión. El logout del frontend solo borra el token y el perfil del navegador (localStorage); el token sigue siendo válido en el servidor hasta que se elimine manualmente.
+
+
+Ajustes del backend para React
+
+GET /api/mascotas/?todos=1: devuelve todas las mascotas sin paginacion y conserva los filtros y el ordenamiento.
+GET /api/solicitudes/?todos=1: devuelve todas las solicitudes sin paginacion y conserva los filtros.
+GET /api/visitas/?solicitud=<id>: devuelve unicamente las visitas de la solicitud indicada y responde 400 si el identificador es invalido.
