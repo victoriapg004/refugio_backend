@@ -57,3 +57,37 @@ class VisitaReglasTests(BaseAPITestCase):
 
         invalida = self.client.get('/api/visitas/?solicitud=abc')
         self.assertEqual(invalida.status_code, 400)
+    
+    def test_detalle_visita_y_permisos(self):
+        visita = Visita.objects.create(
+            solicitud=self.solicitud,
+            fecha_hora=timezone.now() + timedelta(days=3)
+        )
+
+        url = f'/api/visitas/{visita.id}/'
+
+        respuesta = self.client.get(url)
+        self.assertEqual(respuesta.status_code, 200)
+        self.assertEqual(respuesta.data['id'], visita.id)
+
+        self.como(self.consulta)
+        respuesta = self.client.patch(
+            url, {'observaciones': 'Prueba'}, format='json')
+        self.assertEqual(respuesta.status_code, 403)
+
+        self.client.force_authenticate(user=None)
+        respuesta = self.client.patch(
+            url, {'observaciones': 'Prueba'}, format='json')
+        self.assertEqual(respuesta.status_code, 401)
+
+        self.como(self.operador)
+        respuesta = self.client.patch(
+            url, {'observaciones': 'Visita actualizada'}, format='json')
+        self.assertEqual(respuesta.status_code, 200)
+
+        respuesta = self.client.delete(url)
+        self.assertEqual(respuesta.status_code, 403)
+
+        self.como(self.admin)
+        respuesta = self.client.delete(url)
+        self.assertEqual(respuesta.status_code, 204)
