@@ -144,6 +144,7 @@ PUT/PATCH /api/salud/registros/{id}/ — modifica un registro.
 DELETE /api/salud/registros/{id}/ — elimina un registro según permisos.
 4.8 Estadísticas
 GET /api/estadisticas/ — presenta estadísticas agregadas del refugio, como mascotas disponibles por especie, solicitudes, aplicaciones de vacunas y próximas visitas. Requiere autenticación.
+GET /api/perfil/ — devuelve username, rol (administrador, operador o consulta) y las banderas puede_crear, puede_editar y puede_borrar del usuario autenticado. Requiere token; sin token responde 401.
 4.9 Ejemplos de consultas
 Mascotas disponibles de especie gato:
 
@@ -168,3 +169,5 @@ AJUSTES PARA EL FRONTEND
 
 CORS: el frontend en React VITE corre en http://localhost:5173 y consume la API en http://127.0.0.1:8000
 Para que funcionara en el navegador correctamente se instaló django-cors-headers, se agregó 'corsheaders' a INSTALLED_APPS, 'corsheaders.middleware.CorsMiddleware' en MIDDLEWARE y se definió CORS_ALLOWED_ORIGINS con las dos direcciones del frontend (localhost y 127.0.0.1, puerto 5173).
+
+Limitación del cierre de sesión: DRF con TokenAuthentication no revoca el token al cerrar sesión. El logout del frontend solo borra el token y el perfil del navegador (localStorage); el token sigue siendo válido en el servidor hasta que se elimine manualmente.
