@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { listarAdoptantes, eliminarAdoptante } from '../../api/adoptantes'
 import { mensajeError } from '../../utils/errores.js'
 import usePermisos from '../../hooks/usePermisos.js'
@@ -13,7 +13,8 @@ function ListaAdoptantes() {
   const [adoptantes, setAdoptantes] = useState([])
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState('')
-  const [exito, setExito] = useState('')
+  const location = useLocation()
+  const [exito, setExito] = useState(location.state?.exito ?? '')
   const [aBorrar, setABorrar] = useState(null)
 
   useEffect(() => {

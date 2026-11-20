@@ -41,12 +41,18 @@ function AdoptanteForm() {
     setErrores({})
     setGuardando(true)
     try {
-      if (id) {
-        await editarAdoptante(id, datos)
-      } else {
-        await crearAdoptante(datos)
-      }
-      navigate('/adoptantes')
+        if (id) {
+            await editarAdoptante(id, datos)
+        } else {
+            await crearAdoptante(datos)
+        }
+        navigate('/adoptantes', {
+            state: {
+            exito: id
+                ? 'Adoptante actualizado correctamente.'
+                : 'Adoptante creado correctamente.',
+            },
+        })
     } catch (err) {
       if (err.response?.status === 400 && typeof err.response.data === 'object') {
         setErrores(err.response.data)
