@@ -8,8 +8,13 @@ import MascotaForm from './pages/mascotas/MascotaForm.jsx'
 import ListaAdoptantes from './pages/adoptantes/ListaAdoptantes.jsx'
 import AdoptanteForm from './pages/adoptantes/AdoptanteForm.jsx'
 import ListaSolicitudes from './pages/solicitudes/ListaSolicitudes.jsx'
-import ListaVisitas from './pages/visitas/ListaVisitas.jsx'
 import ListaSalud from './pages/salud/ListaSalud.jsx'
+import VacunaForm from './pages/salud/VacunaForm.jsx'
+import ListaRegistros from './pages/salud/ListaRegistros.jsx'
+import RegistroForm from './pages/salud/RegistroForm.jsx'
+import VisitaForm from './pages/visitas/VisitaForm.jsx'
+import ListaVisitas from './pages/visitas/ListaVisitas.jsx'
+
 
 function App() {
   return (
@@ -25,8 +30,15 @@ function App() {
           <Route path="/adoptantes/nueva" element={<AdoptanteForm />} />
           <Route path="/adoptantes/:id/editar" element={<AdoptanteForm />} />
           <Route path="/solicitudes" element={<ListaSolicitudes />} />
-          <Route path="/visitas" element={<ListaVisitas />} />
           <Route path="/salud" element={<ListaSalud />} />
+          <Route path="/salud/vacunas/nueva" element={<VacunaForm />} />
+          <Route path="/salud/vacunas/:id/editar" element={<VacunaForm />} />
+          <Route path="/salud/registros" element={<ListaRegistros />} />
+          <Route path="/salud/registros/nuevo" element={<RegistroForm />} />
+          <Route path="/salud/registros/:id/editar" element={<RegistroForm />} />
+          <Route path="/visitas" element={<ListaVisitas />} />
+          <Route path="/visitas/nueva" element={<VisitaForm />} />
+          <Route path="/visitas/:id/editar" element={<VisitaForm />} />
         </Route>
       </Route>
     </Routes>
