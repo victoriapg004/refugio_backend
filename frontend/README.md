@@ -1,126 +1,177 @@
-Refugio de mascotas y adopciones: API REST
-API REST desarrollada con Django 5.2, Django REST Framework y MySQL para administrar un refugio de mascotas. Es un proyecto de Desarrollo de Software IV de la Universidad de Costa Rica, Sede del Pacífico.
+Refugio de mascotas y adopciones
 
-El proceso de adopción comienza cuando una persona solicita adoptar una mascota. Posteriormente se programa una visita de evaluación; según el resultado, la solicitud puede aprobarse o rechazarse. Al aprobarse, la mascota cambia al estado adoptada. El sistema también administra vacunas y registros de vacunación.
-Módulos
-El módulo mascotas permite registrar mascotas y administrar sus estados: disponible, en proceso y adoptada.
+Sistema para administrar un refugio de mascotas. El backend es una API REST con Django 5.2, Django REST Framework y MySQL. El frontend es una aplicación React (Vite) con React Router, Axios y Bootstrap 5, ubicada en la carpeta frontend.
 
-El módulo adoptantes almacena los datos de las personas interesadas en adoptar.
-
-El módulo solicitudes gestiona las solicitudes que relacionan a los adoptantes con las mascotas.
-
-El módulo visitas administra las visitas de evaluación relacionadas con una solicitud.
-
-El módulo salud gestiona las vacunas y los registros de vacunación de las mascotas.
-
-La información detallada de reglas de negocio, permisos, endpoints y relaciones se encuentra en docs/documentacion_tecnica.md.
 Requisitos
+
 - Python 3.12 o superior, compatible con las dependencias fijadas en requirements.txt.
-- MySQL Server 8 y MySQL Workbench para administrar la base y generar el diagrama ER.
-- Git y una terminal; los ejemplos siguientes utilizan PowerShell en Windows.
-- Postman para importar y ejecutar la colección de peticiones.
+- MySQL Server 8 y MySQL Workbench.
+- Node.js 22 LTS (o 20.19 o superior) con npm.
+- Git y una terminal; los ejemplos utilizan PowerShell en Windows.
 - Una cuenta MySQL con permiso de uso sobre refugio_db y permisos de creación y eliminación de bases para ejecutar las pruebas de Django.
-Instalación paso a paso
+
+Instalación del backend
+
 1. Clonar el repositorio
+
 git clone https://github.com/victoriapg004/refugio_backend.git
+
 cd refugio_backend
-Si ya tienes el proyecto descargado y abierto en VS Code, no necesitas clonarlo nuevamente.
+
 2. Crear y activar el entorno virtual
+
 py -m venv .venv
-.\.venv\Scripts\Activate.ps1
-El indicador (.venv) debe aparecer al comienzo de la terminal. Si Windows bloquea la activación, puedes habilitar scripts para esa sesión con Set-ExecutionPolicy -Scope Process RemoteSigned y volver a activar el entorno.
+
+.\\.venv\Scripts\Activate.ps1
+
+El indicador (.venv) debe aparecer al comienzo de la terminal. Si Windows bloquea la activación, ejecuta Set-ExecutionPolicy -Scope Process RemoteSigned y vuelve a activar el entorno.
+
 3. Instalar las dependencias
+
 python -m pip install -r requirements.txt
+
 4. Crear el archivo de configuración .env
+
 Copy-Item .env.example .env
-Genera una clave secreta local mediante:
+
+Genera una clave secreta local con:
+
 python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
-Abre .env y completa las variables según la cuenta de MySQL que tienes configurada:
+
+Abre .env y completa las variables con tu cuenta de MySQL:
+
 SECRET_KEY=PEGA_AQUI_TU_CLAVE_GENERADA
+
 DEBUG=True
+
 DB_NAME=refugio_db
+
 DB_USER=TU_USUARIO_MYSQL
+
 DB_PASSWORD=TU_CONTRASENA_MYSQL
+
 DB_HOST=127.0.0.1
+
 DB_PORT=3306
-No subas .env ni compartas las contraseñas o la clave secreta. El archivo .env.example solamente incluye los nombres de las variables necesarias.
+
+No subas .env ni compartas contraseñas o la clave secreta. El archivo .env.example solo incluye los nombres de las variables.
+
 5. Crear la base de datos
-En MySQL Workbench, abre tu conexión y ejecuta:
-CREATE DATABASE IF NOT EXISTS refugio_db
-CHARACTER SET utf8mb4
-COLLATE utf8mb4_unicode_ci;
-Comprueba que aparece con SHOW DATABASES;. El usuario configurado en .env debe tener acceso a ella.
+
+En MySQL Workbench ejecuta:
+
+CREATE DATABASE IF NOT EXISTS refugio_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 6. Aplicar las migraciones y cargar los datos iniciales
-En PowerShell, desde la carpeta donde se encuentra manage.py:
+
+Desde la carpeta donde se encuentra manage.py:
+
 python manage.py migrate
+
 python manage.py loaddata docs/datos_iniciales.json
-7. Crear el usuario administrador
-python manage.py createsuperuser
-Completa el nombre, correo y contraseña solicitados. Este usuario administrará el sistema y tendrá acceso al sitio /admin/.
-8. Crear los usuarios operador y consulta
-Inicia el servidor:
+
+7. Crear los usuarios de prueba
+
+Sigue el apartado Usuarios de prueba ficticios de este documento.
+
+Instalación del frontend
+
+Desde la raíz del repositorio:
+
+cd frontend
+
+npm install
+
+Copy-Item .env.example .env
+
+El archivo frontend/.env.example contiene únicamente la URL base de la API, sin secretos:
+
+VITE_API_URL=http://127.0.0.1:8000/api
+
+Si el backend corre en otra dirección o puerto, cambia ese valor en frontend/.env.
+
+Ejecución del backend
+
+Con el entorno virtual activado, desde la raíz del proyecto:
+
 python manage.py runserver
-Abre http://127.0.0.1:8000/admin/, inicia sesión con el superusuario y crea dos usuarios desde Users: operador y consulta. Establece contraseñas privadas para cada uno y deja desmarcadas las opciones Staff status y Superuser status.
 
-Desde Groups, crea el grupo con el nombre exacto Operador y asígnale el usuario operador. El usuario consulta debe quedar fuera de ese grupo. La API reconoce el rol de operador por la pertenencia al grupo, no por el nombre de usuario.
+- API REST: http://127.0.0.1:8000/api/
+- Administración: http://127.0.0.1:8000/admin/
+- Obtener token: POST http://127.0.0.1:8000/api/token/ con el usuario y la contraseña.
 
-Alternativamente, el grupo se puede crear y asignar desde Django shell, una vez creados ambos usuarios:
+Para ejecutar las pruebas automatizadas:
+
+python manage.py test
+
+Ejecución del frontend
+
+Con el backend en ejecución, abre otra terminal:
+
+cd frontend
+
+npm run dev
+
+Abre http://localhost:5173 e inicia sesión con uno de los usuarios de prueba.
+
+Otros comandos, desde la carpeta frontend:
+
+npm run lint
+
+npm run build
+
+Configuración CORS
+
+El backend usa django-cors-headers. En config/settings.py se permiten los orígenes del servidor de desarrollo de Vite:
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://127.0.0.1:5173']
+
+Si el frontend se ejecuta en otro puerto u origen, hay que añadirlo a esa lista; de lo contrario, el navegador bloqueará las peticiones a la API.
+
+Usuarios de prueba ficticios
+
+Los datos iniciales no incluyen usuarios. Para reproducir los escenarios de la documentación, crea estos usuarios. Las contraseñas son de ejemplo y solo deben usarse en un entorno local.
+
+| Usuario | Contraseña de ejemplo | Perfil | Cómo se reconoce |
+|---|---|---|---|
+| admin_refugio | Refugio.Admin2026 | Administrador | is_staff activado |
+| operador_refugio | Refugio.Oper2026 | Operador | Pertenece al grupo Operador |
+| consulta_refugio | Refugio.Cons2026 | Consulta | Sin is_staff y sin grupo |
+
+Crear el administrador:
+
+python manage.py createsuperuser
+
+Crear el operador, el usuario de consulta y el grupo desde el shell de Django:
+
 python manage.py shell
+
 from django.contrib.auth.models import Group, User
 
 grupo, _ = Group.objects.get_or_create(name='Operador')
-operador = User.objects.get(username='operador')
+
+operador = User.objects.create_user('operador_refugio', password='Refugio.Oper2026')
+
 operador.groups.add(grupo)
+
+User.objects.create_user('consulta_refugio', password='Refugio.Cons2026')
+
 exit()
-Ejecución del servidor
-Con el entorno virtual activado, desde la raíz del proyecto:
-python manage.py runserver
-- API REST: http://127.0.0.1:8000/api/
-- Administración: http://127.0.0.1:8000/admin/
-- Obtener token: POST http://127.0.0.1:8000/api/token/
-Para solicitar un token, envía un JSON con las credenciales del usuario creado:
-{
-  "username": "operador",
-  "password": "CONTRASENA_CONFIGURADA_PARA_OPERADOR"
-}
-En las solicitudes protegidas incluye la cabecera Authorization: Token TU_TOKEN.
-Roles y permisos
-El administrador puede consultar, crear, actualizar y eliminar registros mediante GET, POST, PUT, PATCH y DELETE. El proyecto reconoce al administrador por el atributo is_staff.
 
-El operador puede consultar, crear y actualizar registros mediante GET, POST, PUT y PATCH. No tiene autorización para eliminar. Para reconocer este rol, el usuario debe pertenecer al grupo Operador.
+También se pueden crear desde http://127.0.0.1:8000/admin/ en Users y Groups. El grupo debe llamarse exactamente Operador, porque la API reconoce el rol por la pertenencia al grupo y no por el nombre de usuario.
 
-El usuario consulta únicamente puede realizar operaciones GET. No puede crear, modificar ni eliminar registros.
+Permisos de cada perfil:
 
-Los usuarios sin autenticar pueden utilizar los GET públicos, pero las operaciones de escritura sin token devuelven el código HTTP 401.
+- Administrador: consultar, crear, editar y eliminar.
+- Operador: consultar, crear y editar; no puede eliminar (la API responde 403).
+- Consulta: solo consultar; crear, editar o eliminar responde 403.
 
-Un usuario autenticado sin permiso de escritura recibe 403. El endpoint GET /api/estadisticas/ requiere autenticación, aunque los listados públicos acepten GET sin token.
-Pruebas automatizadas
-Las pruebas cubren creación y validación de datos, reglas de negocio, permisos, filtros, paginación y estadísticas.
+Limitaciones
 
-Ejecutar todas las pruebas:
-python manage.py test
-Ejecutar las pruebas de los módulos adoptantes y salud:
-python manage.py test adoptantes salud
-Django crea una base temporal, normalmente test_refugio_db, para ejecutar las pruebas; la cuenta MySQL debe tener permisos para crearla y eliminarla. Al terminar correctamente, la consola debe mostrar OK.
-
-Si aparece The SECRET_KEY setting must not be empty, completa SECRET_KEY en .env. Si aparece Access denied for user, revisa las credenciales y los permisos de MySQL.
-Colección de Postman
-1. Abre Postman y selecciona Import.
-2. Importa el archivo docs/refugio_postman_collection.json.
-3. En la pestaña Variables de la colección, comprueba que base_url sea http://127.0.0.1:8000.
-4. Completa admin_password con la contraseña local del administrador y revisa que la petición de login use el usuario administrador que creaste.
-5. Ejecuta primero la carpeta Auth para obtener los tokens. La colección puede guardarlos en las variables token, token_operador y token_consulta.
-6. Ejecuta las demás solicitudes o usa Run collection y revisa los códigos HTTP esperados. Si una petición requiere token, utiliza Authorization: Token {{token}} o la variable de rol correspondiente.
-Limitaciones conocidas
-- No incluye frontend público; se utiliza mediante Postman u otro cliente HTTP y el administrador de Django.
-- Solo los listados de mascotas y solicitudes incluyen paginación de cinco registros y filtros; la búsqueda por texto está disponible en mascotas.
-- Los tokens estándar de DRF no caducan ni se renuevan automáticamente en este proyecto.
-- Los GET públicos permiten leer listados sin autenticación; el perfil consulta tiene las mismas capacidades de lectura, excepto que las estadísticas exigen autenticación.
-- La configuración de DEBUG=True y ALLOWED_HOSTS=[] está orientada a desarrollo local; no está preparada para despliegue en producción.
-- La base de datos requiere MySQL configurado localmente y permisos adicionales para ejecutar las pruebas.
+- El logout no revoca el token en el servidor. Cerrar sesión borra el token y el perfil del navegador, pero el token sigue siendo válido en Django hasta que se elimine desde el administrador, porque el backend no ofrece un endpoint de revocación.
+- Los tokens de Django REST Framework no caducan ni se renuevan automáticamente.
+- Los GET de la API son públicos: los listados se pueden leer sin token. El frontend sí exige iniciar sesión para entrar a cualquier pantalla, y los endpoints de perfil y estadísticas exigen autenticación.
+- Solo los listados de mascotas y solicitudes tienen paginación (5 registros por página) y filtros en el backend; la búsqueda por texto y el ordenamiento están disponibles en mascotas.
+- Las solicitudes no se editan libremente desde la interfaz: después de crearlas solo cambian de estado (aprobar o rechazar), que es la operación definida por las reglas de negocio.
+- La configuración DEBUG=True y ALLOWED_HOSTS=[] está orientada a desarrollo local, no a producción.
 - No hay recuperación automática de contraseñas por correo.
-Documentación técnica
-La documentación técnica del proyecto se encuentra en docs/documentacion_tecnica.md. Este archivo contiene el diagrama entidad-relación, la matriz de permisos, las 10 reglas de negocio y el catálogo de endpoints con sus respectivos parámetros de consulta.
-El diagrama entidad-relación fue generado mediante MySQL Workbench utilizando la opción Database -> Reverse Engineer sobre la base de datos refugio_db. La imagen se encuentra en docs/diagrama_er.png y el modelo editable en docs/diagrama.mwb.
-Trabajo en equipo
-Proyecto desarrollado de manera colaborativa. Las modificaciones se registran mediante commits y pull requests en GitHub para su revisión antes de integrarse a main.
