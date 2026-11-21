@@ -1,7 +1,7 @@
 # Escenarios manuales del frontend
 
 ## 1. Login correcto
-- Pasos: entrar con `admin_refugio` y su contraseña.
+- Pasos: entrar con el usuario administrador `VBA` y su contraseña.
 - Resultado esperado: llega al Dashboard y la barra muestra el usuario y el rol.
 - Resultado obtenido: correcto.
 
@@ -36,7 +36,7 @@
 - Resultado obtenido: correcto.
 
 ## 11. Perfil consulta
-- Pasos: con `consulta_refugio`, entrar a `/mascotas/nueva` y guardar.
+- Pasos: con el usuario `consulta1`, entrar a `/mascotas/nueva` y guardar.
 - Resultado esperado: alerta de 403 "No tiene permiso para esta acción"; en la lista no hay botones de crear ni borrar.
 - Resultado obtenido: correcto.
 
