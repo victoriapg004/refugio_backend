@@ -1,6 +1,5 @@
-
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { listarMascotas } from '../../api/mascotas.js'
 import { listarAdoptantes } from '../../api/adoptantes.js'
 import {
@@ -44,7 +43,13 @@ function VisitaForm() {
   const { puedeCrear, puedeEditar } = usePermisos()
   const permitido = id ? puedeEditar : puedeCrear
 
-  const [datos, setDatos] = useState(VACIO)
+  // Si se llega desde el detalle de una solicitud (?solicitud=<id>),
+  // se preselecciona esa solicitud y al terminar se vuelve al detalle
+  const [searchParams] = useSearchParams()
+  const solicitudOrigen = searchParams.get('solicitud') || ''
+  const volverA = solicitudOrigen ? `/solicitudes/${solicitudOrigen}` : '/visitas'
+
+  const [datos, setDatos] = useState({ ...VACIO, solicitud: id ? '' : solicitudOrigen })
   const [solicitudes, setSolicitudes] = useState([])
   const [mascotas, setMascotas] = useState({})
   const [adoptantes, setAdoptantes] = useState({})
@@ -172,7 +177,7 @@ function VisitaForm() {
         await crearVisita(payload)
       }
 
-      navigate('/visitas', {
+      navigate(volverA, {
         state: {
           exito: id
             ? 'Visita actualizada correctamente.'
@@ -295,7 +300,7 @@ function VisitaForm() {
             {guardando ? 'Guardando...' : 'Guardar'}
           </button>
 
-          <Link to="/visitas" className="btn btn-outline-secondary">
+          <Link to={volverA} className="btn btn-outline-secondary">
             Cancelar
           </Link>
         </div>
