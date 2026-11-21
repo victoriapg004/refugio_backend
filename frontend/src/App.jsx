@@ -8,12 +8,15 @@ import MascotaForm from './pages/mascotas/MascotaForm.jsx'
 import ListaAdoptantes from './pages/adoptantes/ListaAdoptantes.jsx'
 import AdoptanteForm from './pages/adoptantes/AdoptanteForm.jsx'
 import ListaSolicitudes from './pages/solicitudes/ListaSolicitudes.jsx'
+import SolicitudForm from './pages/solicitudes/SolicitudForm.jsx'
+import DetalleSolicitud from './pages/solicitudes/DetalleSolicitud.jsx'
 import ListaSalud from './pages/salud/ListaSalud.jsx'
 import VacunaForm from './pages/salud/VacunaForm.jsx'
 import ListaRegistros from './pages/salud/ListaRegistros.jsx'
 import RegistroForm from './pages/salud/RegistroForm.jsx'
 import VisitaForm from './pages/visitas/VisitaForm.jsx'
 import ListaVisitas from './pages/visitas/ListaVisitas.jsx'
+
 
 
 function App() {
@@ -30,6 +33,8 @@ function App() {
           <Route path="/adoptantes/nueva" element={<AdoptanteForm />} />
           <Route path="/adoptantes/:id/editar" element={<AdoptanteForm />} />
           <Route path="/solicitudes" element={<ListaSolicitudes />} />
+          <Route path="/solicitudes/nueva" element={<SolicitudForm />} />
+          <Route path="/solicitudes/:id" element={<DetalleSolicitud />} />
           <Route path="/salud" element={<ListaSalud />} />
           <Route path="/salud/vacunas/nueva" element={<VacunaForm />} />
           <Route path="/salud/vacunas/:id/editar" element={<VacunaForm />} />
