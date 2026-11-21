@@ -11,6 +11,13 @@ function Login() {
   const [usuario, setUsuario] = useState('')
   const [contrasena, setContrasena] = useState('')
   const [error, setError] = useState('')
+  
+  // Mensaje que deja cliente.js cuando la API respondió 401 en otra pantalla
+  const [aviso, setAviso] = useState(() => {
+    const texto = sessionStorage.getItem('aviso_sesion') || ''
+    sessionStorage.removeItem('aviso_sesion')
+    return texto
+  })
   const [enviando, setEnviando] = useState(false)
 
   if (estaAutenticado) return <Navigate to="/" replace />
@@ -18,6 +25,7 @@ function Login() {
   async function enviar(e) {
     e.preventDefault()
     setError('')
+    setAviso('')
     setEnviando(true)
     try {
       await login(usuario, contrasena)
@@ -38,6 +46,7 @@ function Login() {
     <div className="container py-5" style={{ maxWidth: 420 }}>
       <div className="text-center mb-2"><Logo tamano={84} /></div>
       <h2 className="mb-4 text-center">Iniciar sesión</h2>
+      <Alerta mensaje={aviso} tipo="warning" onCerrar={() => setAviso('')} />
       <Alerta mensaje={error} onCerrar={() => setError('')} />
       <form onSubmit={enviar}>
         <div className="mb-3">
