@@ -20,6 +20,8 @@ cliente.interceptors.response.use(
     if (error.response?.status === 401 && !url.includes('/token/')) {
       localStorage.removeItem('token')
       localStorage.removeItem('perfil')
+      // Se avisa en el login por qué se cerró la sesión (401 visible y controlado)
+      sessionStorage.setItem('aviso_sesion', 'Su sesión no es válida o expiró. Inicie sesión de nuevo.')
       window.location.href = '/login'
     }
     return Promise.reject(error)

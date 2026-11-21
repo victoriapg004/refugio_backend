@@ -1,6 +1,6 @@
 # Escenarios manuales del frontend
 
-Pruebas manuales reproducibles con los usuarios de prueba: `VBA` (administrador), `operador` y `consulta1` (consulta). Requieren el backend (`python manage.py runserver`) y el frontend (`npm run dev`) en ejecución. Las capturas están en `docs/capturas_frontend/`.
+Pruebas manuales reproducibles con los usuarios de prueba: `VBA` (administrador), `operador` (operador) y `consulta1` (consulta), creados como indica el README. Requieren el backend (`python manage.py runserver`) y el frontend (`npm run dev`) en ejecución. Las capturas están en `docs/capturas_frontend/`.
 
 ## 1. Login correcto
 - Pasos: entrar con el usuario administrador `VBA` y su contraseña.
