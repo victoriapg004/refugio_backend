@@ -122,3 +122,45 @@ class MascotaTests(BaseAPITestCase):
 
         normal = self.client.get('/api/mascotas/')
         self.assertEqual(len(normal.data['resultados']), 5)
+
+#-------------------------------------------------------------------
+    # ---------- R12: "adoptada" solo por aprobación ----------
+    def test_regla12_no_se_puede_crear_mascota_adoptada(self):
+        self.como(self.operador)
+        r = self.client.post(
+            '/api/mascotas/',
+            {'nombre': 'Luna', 'especie': 'gato', 'edad': 12, 'estado': 'adoptada'},
+            format='json',
+        )
+        self.assertEqual(r.status_code, 400)
+        self.assertIn('estado', r.data)
+        self.assertEqual(Mascota.objects.count(), 0)
+
+    def test_regla12_no_se_puede_marcar_adoptada_a_mano(self):
+        m = self.crear_mascota()
+        self.como(self.operador)
+        r = self.client.patch(f'/api/mascotas/{m.id}/', {'estado': 'adoptada'}, format='json')
+        self.assertEqual(r.status_code, 400)
+        self.assertIn('estado', r.data)
+        m.refresh_from_db()
+        self.assertEqual(m.estado, 'disponible')
+
+    def test_regla12_mascota_adoptada_no_vuelve_a_otro_estado(self):
+        m = self.crear_mascota(estado='adoptada')
+        self.como(self.operador)
+        r = self.client.patch(f'/api/mascotas/{m.id}/', {'estado': 'disponible'}, format='json')
+        self.assertEqual(r.status_code, 400)
+        m.refresh_from_db()
+        self.assertEqual(m.estado, 'adoptada')
+
+    def test_regla12_mascota_adoptada_permite_editar_otros_campos(self):
+        m = self.crear_mascota(estado='adoptada')
+        self.como(self.operador)
+        r = self.client.put(
+            f'/api/mascotas/{m.id}/',
+            {'nombre': 'Luna', 'especie': 'gato', 'edad': 12, 'descripcion': 'Ya tiene hogar', 'estado': 'adoptada'},
+            format='json',
+        )
+        self.assertEqual(r.status_code, 200)
+        m.refresh_from_db()
+        self.assertEqual(m.descripcion, 'Ya tiene hogar')

@@ -87,7 +87,21 @@ Al actualizar una solicitud al estado aprobada, la mascota asociada cambia autom
 
 Ubicación: solicitudes/serializers.py.
 
-Comportamiento: las reglas R1 a R9 pueden producir 400 Bad Request por validación. R10 produce una actualización del estado y no representa por sí misma un error de validación.
+R11. Una solicitud resuelta no cambia
+Una solicitud en estado aprobada o rechazada ya no se puede modificar (PUT ni PATCH). La interfaz solo ofrece Aprobar y Rechazar en las solicitudes pendientes, pero la regla también se valida en el servidor, porque el frontend no puede ser la única protección.
+
+Ubicación: solicitudes/serializers.py, validate.
+R12. "Adoptada" solo por aprobación
+Una mascota solo pasa al estado adoptada cuando se aprueba su solicitud (R10). No se puede crear ni editar una mascota con estado adoptada de forma manual, y una mascota adoptada no puede volver a otro estado desde el CRUD de mascotas. Sí se pueden editar sus demás campos. El formulario de edición del frontend tiene la opción "Adoptada" deshabilitada.
+
+Ubicación: mascotas/serializers.py, validate_estado.
+R13. Estado "en proceso" automático
+Al crear una solicitud, la mascota pasa de disponible a en_proceso. Si la solicitud se rechaza o se elimina y la mascota ya no tiene solicitudes pendientes, vuelve a disponible. Con R10 y R13 el flujo completo es: disponible, en proceso y adoptada.
+
+Ubicación: solicitudes/serializers.py (create, update y la función sincronizar_estado_mascota) y solicitudes/views.py (al eliminar).
+
+Comportamiento: las reglas R1 a R9, R11 y R12 pueden producir 400 Bad Request por validación. R10 y R13 producen una actualización del estado de la mascota y no representan por sí mismas un error de validación.
+
 4. CATÁLOGO DE ENDPOINTS
 URL local de ejemplo: http://127.0.0.1:8000
 4.1 Autenticación
@@ -353,15 +367,32 @@ Nota: la clave exacta de cada error 400 (nombre del campo o non_field_errors) de
 
 6. AMPLIACIONES DEL BACKEND PARA EL FRONTEND (JUSTIFICADAS)
 
-Ninguna ampliación cambia las reglas de negocio ni debilita la seguridad: los nuevos endpoints y parámetros son de solo lectura y conservan los mismos permisos que ya tenía cada recurso.
+Ninguna ampliación debilita las reglas de negocio ni la seguridad: los nuevos endpoints y parámetros son de solo lectura y conservan los mismos permisos que ya tenía cada recurso, y las reglas R11 a R13 solo restringen más lo que la interfaz podía hacer.
 
-| Ampliación | Problema que resuelve en la interfaz | Seguridad |
-|---|---|---|
-| CORS con django-cors-headers (`CORS_ALLOWED_ORIGINS` = localhost:5173 y 127.0.0.1:5173) | Sin CORS, el navegador bloquea las peticiones de la app de Vite (puerto 5173) a la API (puerto 8000). | Solo se permiten los dos orígenes del servidor de desarrollo, no cualquier origen. |
-| `GET /api/perfil/` | Después del login, el frontend necesita saber el rol del usuario para mostrar u ocultar los botones de crear, editar y eliminar (usePermisos.js) y para mostrar el usuario en la barra superior. El endpoint de token de DRF solo devuelve el token. | Exige token (401 sin él). Ocultar botones es solo experiencia de usuario: la API sigue respondiendo 403. |
-| `GET /api/mascotas/?todos=1` | Los selectores de mascota (nueva solicitud, nuevo registro de vacunación, filtros) necesitan todas las mascotas; con paginación solo llegarían 5. Conserva filtros y orden. | Lectura pública, igual que el listado paginado. |
-| `GET /api/solicitudes/?todos=1` | El selector de solicitud al crear una visita y los nombres de la lista de visitas necesitan todas las solicitudes, no solo una página. Conserva filtros. | Lectura pública, igual que el listado paginado. |
-| `GET /api/visitas/?solicitud=<id>` | El detalle de una solicitud muestra sus visitas vinculadas sin descargar y filtrar todas las visitas en el navegador. Responde 400 si el id no es numérico. | Lectura pública, igual que el listado de visitas. |
+CORS con django-cors-headers (CORS_ALLOWED_ORIGINS = localhost:5173 y 127.0.0.1:5173)
+- Problema que resuelve en la interfaz: Sin CORS, el navegador bloquea las peticiones de la app de Vite (puerto 5173) a la API (puerto 8000).
+- Seguridad: Solo se permiten los dos orígenes del servidor de desarrollo, no cualquier origen.
+GET /api/perfil/
+- Problema que resuelve en la interfaz: Después del login, el frontend necesita saber el rol del usuario para mostrar u ocultar los botones de crear, editar y eliminar (usePermisos.js) y para mostrar el usuario en la barra superior. El endpoint de token de DRF solo devuelve el token.
+- Seguridad: Exige token (401 sin él). Ocultar botones es solo experiencia de usuario: la API sigue respondiendo 403.
+GET /api/mascotas/?todos=1
+- Problema que resuelve en la interfaz: Los selectores de mascota (nueva solicitud, nuevo registro de vacunación, filtros) necesitan todas las mascotas; con paginación solo llegarían 5. Conserva filtros y orden.
+- Seguridad: Lectura pública, igual que el listado paginado.
+GET /api/solicitudes/?todos=1
+- Problema que resuelve en la interfaz: El selector de solicitud al crear una visita y los nombres de la lista de visitas necesitan todas las solicitudes, no solo una página. Conserva filtros.
+- Seguridad: Lectura pública, igual que el listado paginado.
+GET /api/visitas/?solicitud=<id>
+- Problema que resuelve en la interfaz: El detalle de una solicitud muestra sus visitas vinculadas sin descargar y filtrar todas las visitas en el navegador. Responde 400 si el id no es numérico.
+- Seguridad: Lectura pública, igual que el listado de visitas.
+R11: una solicitud aprobada o rechazada no se puede modificar
+- Problema que resuelve en la interfaz: La interfaz solo muestra Aprobar y Rechazar en las pendientes, pero cualquiera podía enviar la petición HTTP directamente y cambiar una solicitud ya resuelta.
+- Seguridad: Refuerza la seguridad: la protección queda en el servidor y no solo en los botones.
+R12: "adoptada" solo por aprobación (y opción deshabilitada en el formulario de mascotas)
+- Problema que resuelve en la interfaz: Desde Editar mascota se podía marcar "Adoptada" a mano, o devolver a "Disponible" una mascota adoptada, y la interfaz rompía el flujo de negocio.
+- Seguridad: Es más restrictiva: el único camino hacia "adoptada" es aprobar la solicitud (R10).
+R13: estado "en proceso" automático
+- Problema que resuelve en la interfaz: Al crear una solicitud la mascota seguía "Disponible" y el estado "En proceso" nunca se usaba; el frontend no mostraba el cambio de estado entre entidades.
+- Seguridad: No cambia permisos; el estado de la mascota solo se actualiza como efecto de operaciones que ya requerían rol de operador o administrador.
 
 6.1 Limitación del cierre de sesión
 
