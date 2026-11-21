@@ -7,7 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import SolicitudAdopcion
-from .serializers import SolicitudAdopcionSerializer
+from .serializers import SolicitudAdopcionSerializer, sincronizar_estado_mascota
 
 
 @api_view(['GET', 'POST'])
@@ -70,6 +70,9 @@ def solicitud_detalle_api(request, id):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    
+    mascota = solicitud.mascota
+
     try:
         solicitud.delete()
     except ProtectedError:
@@ -77,4 +80,6 @@ def solicitud_detalle_api(request, id):
             {'error': 'No se puede eliminar: la solicitud tiene visitas registradas.'},
             status=status.HTTP_409_CONFLICT
         )
+    #R13: al eliminar una solicitud pendiente se vuelve a calcular el estado de la mascota
+    sincronizar_estado_mascota(mascota)
     return Response(status=status.HTTP_204_NO_CONTENT)

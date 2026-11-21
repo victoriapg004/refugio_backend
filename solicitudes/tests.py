@@ -65,3 +65,67 @@ class SolicitudReglasTests(BaseAPITestCase):
 
         normal = self.client.get('/api/solicitudes/')
         self.assertEqual(len(normal.data['resultados']), 5)
+
+    #-----------------------------------------------------
+    # ---------- R11: una solicitud resuelta no cambia ----------
+    def test_regla11_solicitud_aprobada_no_se_puede_modificar(self):
+        sol = SolicitudAdopcion.objects.create(
+            adoptante=self.adoptante, mascota=self.mascota, estado='aprobada'
+        )
+        r = self.client.patch(f'/api/solicitudes/{sol.id}/', {'estado': 'rechazada'}, format='json')
+        self.assertEqual(r.status_code, 400)
+        sol.refresh_from_db()
+        self.assertEqual(sol.estado, 'aprobada')
+
+    def test_regla11_solicitud_rechazada_no_se_puede_modificar(self):
+        sol = SolicitudAdopcion.objects.create(
+            adoptante=self.adoptante, mascota=self.mascota, estado='rechazada'
+        )
+        r = self.client.patch(f'/api/solicitudes/{sol.id}/', {'motivo': 'otro motivo'}, format='json')
+        self.assertEqual(r.status_code, 400)
+        sol.refresh_from_db()
+        self.assertEqual(sol.motivo, '')
+
+    # ---------- R13: estado "en proceso" automático ----------
+    def test_regla13_crear_solicitud_pone_mascota_en_proceso(self):
+        r = self.client.post('/api/solicitudes/', {
+            'adoptante': self.adoptante.id, 'mascota': self.mascota.id, 'motivo': 'x'
+        }, format='json')
+        self.assertEqual(r.status_code, 201)
+        self.mascota.refresh_from_db()
+        self.assertEqual(self.mascota.estado, 'en_proceso')
+
+    def test_regla13_rechazar_unica_solicitud_devuelve_mascota_a_disponible(self):
+        r = self.client.post('/api/solicitudes/', {
+            'adoptante': self.adoptante.id, 'mascota': self.mascota.id, 'motivo': 'x'
+        }, format='json')
+        r2 = self.client.patch(f'/api/solicitudes/{r.data["id"]}/', {'estado': 'rechazada'}, format='json')
+        self.assertEqual(r2.status_code, 200)
+        self.mascota.refresh_from_db()
+        self.assertEqual(self.mascota.estado, 'disponible')
+
+    def test_regla13_rechazar_con_otra_pendiente_mantiene_en_proceso(self):
+        otro = Adoptante.objects.create(nombre='Beto', cedula='2-2222-2222', correo='beto@test.com')
+        r1 = self.client.post('/api/solicitudes/', {
+            'adoptante': self.adoptante.id, 'mascota': self.mascota.id, 'motivo': 'x'
+        }, format='json')
+        self.client.post('/api/solicitudes/', {
+            'adoptante': otro.id, 'mascota': self.mascota.id, 'motivo': 'y'
+        }, format='json')
+        self.client.patch(f'/api/solicitudes/{r1.data["id"]}/', {'estado': 'rechazada'}, format='json')
+        self.mascota.refresh_from_db()
+        self.assertEqual(self.mascota.estado, 'en_proceso')
+
+    def test_regla13_flujo_completo_disponible_en_proceso_adoptada(self):
+        self.assertEqual(self.mascota.estado, 'disponible')
+        r = self.client.post('/api/solicitudes/', {
+            'adoptante': self.adoptante.id, 'mascota': self.mascota.id, 'motivo': 'x'
+        }, format='json')
+        self.mascota.refresh_from_db()
+        self.assertEqual(self.mascota.estado, 'en_proceso')
+        Visita.objects.create(
+            solicitud_id=r.data['id'], fecha_hora=timezone.now() + timedelta(days=1), estado='realizada'
+        )
+        self.client.patch(f'/api/solicitudes/{r.data["id"]}/', {'estado': 'aprobada'}, format='json')
+        self.mascota.refresh_from_db()
+        self.assertEqual(self.mascota.estado, 'adoptada')

@@ -1,6 +1,17 @@
 from rest_framework import serializers
 from .models import SolicitudAdopcion
 
+def sincronizar_estado_mascota(mascota):
+    """R13: la mascota está "en_proceso" solo con solicitudes pendientes
+    y vuelve a "disponible" cuando ya no le queda ninguna. """
+    if mascota.estado == 'adoptada':
+        return
+    hay_pendientes = mascota.solicitudes.filter(estado='pendiente').exists()
+    nuevo_estado = 'en_proceso' if hay_pendientes else 'disponible'
+    if mascota.estado != nuevo_estado:
+        mascota.estado = nuevo_estado
+        mascota.save(update_fields=['estado'])
+
 
 class SolicitudAdopcionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +24,10 @@ class SolicitudAdopcionSerializer(serializers.ModelSerializer):
         mascota = attrs.get('mascota', getattr(instancia, 'mascota', None))
         adoptante = attrs.get('adoptante', getattr(instancia, 'adoptante', None))
         estado = attrs.get('estado', getattr(instancia, 'estado', 'pendiente'))
+
+        #R11: una solicitud aprobada o rechazada ya no se puede modificar
+        if instancia is not None and instancia.estado in ('aprobada', 'rechazada'):
+            raise serializers.ValidationError('Una solicitud aprobada o rechazada ya no se puede modificar.')
 
         #R1: No se puede solicitar una mascota ya adoptada
         if instancia is None or mascota != instancia.mascota:
@@ -44,10 +59,22 @@ class SolicitudAdopcionSerializer(serializers.ModelSerializer):
                     )
         return attrs
 
+    #R13: al crear una solicitud, la mascota pasa a "en_proceso"
+    def create(self, validated_data):
+        solicitud = super().create(validated_data)
+        sincronizar_estado_mascota(solicitud.mascota)
+        return solicitud
+
     #R10: Al aprobar una solicitud, la mascota pasa a "adoptada"
-    def update (self, instance, validated_data):
+    #R13: si se rechaza o se cambia de mascota, se vuelve a calcular el estado
+    def update(self, instance, validated_data):
+        mascota_anterior = instance.mascota
         solicitud = super().update(instance, validated_data)
         if solicitud.estado == 'aprobada':
             solicitud.mascota.estado = 'adoptada'
             solicitud.mascota.save()
+        else:
+            sincronizar_estado_mascota(solicitud.mascota)
+        if mascota_anterior != solicitud.mascota:
+            sincronizar_estado_mascota(mascota_anterior)
         return solicitud

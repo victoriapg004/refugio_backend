@@ -120,6 +120,9 @@ function MascotaForm() {
 
   if (cargando) return <Cargando />
 
+  // R12: una mascota ya adoptada no puede cambiar de estado desde el formulario
+  const yaAdoptada = editando && datos.estado === 'adoptada'
+
   return (
     <div style={{ maxWidth: 640 }}>
       <h2 className="mb-3">{editando ? 'Editar mascota' : 'Nueva mascota'}</h2>
@@ -147,13 +150,19 @@ function MascotaForm() {
           </div>
           <div className="col-md-6 mb-3">
             <label htmlFor="estado" className="form-label">Estado</label>
-            <select id="estado" name="estado" className="form-select"
-              value={datos.estado} onChange={cambiar}>
+            <select id="estado" name="estado" className={`form-select ${errores.estado ? 'is-invalid' : ''}`}
+              value={datos.estado} onChange={cambiar} disabled={yaAdoptada}>
               <option value="disponible">Disponible</option>
               <option value="en_proceso">En proceso</option>
-              <option value="adoptada">Adoptada</option>
+              {/* R12: "Adoptada" solo al aprobar una solicitud, no a mano */}
+              <option value="adoptada" disabled>Adoptada</option>
             </select>
             {textoError('estado')}
+            <div className="form-text">
+              {yaAdoptada
+                ? 'Una mascota adoptada no puede cambiar de estado.'
+                : 'El estado "Adoptada" se asigna solo al aprobar una solicitud de adopción.'}
+            </div>
           </div>
         </div>
 
